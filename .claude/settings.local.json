@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node:*)",
+      "Bash(npm view:*)",
+      "Bash(cd:*)",
+      "Bash(npm create:*)",
+      "Bash(rm:*)",
+      "Bash(for dir:*)",
+      "Bash(find:*)",
+      "Bash(npx vite:*)",
+      "Bash(npm install:*)"
+    ]
+  }
+}
