@@ -101,6 +101,17 @@ const quoteSchema = new mongoose.Schema({
   respondedAt: {
     type: Date,
   },
+  declineReason: {
+    type: String,
+    trim: true,
+    default: '',
+  },
+  templateStyle: {
+    type: String,
+    trim: true,
+    enum: ['clean-minimal', 'bold-modern', 'classic-professional', 'compact-estimate', 'executive-proposal', 'friendly-approachable'],
+    default: 'clean-minimal',
+  },
 }, {
   timestamps: true,
 });

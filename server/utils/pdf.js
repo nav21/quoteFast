@@ -80,7 +80,7 @@ export async function generatePdf(quote, user) {
     shareUrl,
   };
 
-  const templateName = user.templateStyle || 'clean-minimal';
+  const templateName = quote.templateStyle || user.templateStyle || 'clean-minimal';
   const html = await renderTemplate(templateName, data);
 
   const executablePath = process.env.CHROME_EXECUTABLE_PATH || await chromium.executablePath();

@@ -44,6 +44,7 @@ router.get('/:token', async (req, res) => {
         createdAt: quote.createdAt,
         expiresAt: quote.expiresAt,
         respondedAt: quote.respondedAt,
+        templateStyle: quote.templateStyle,
       },
       business: {
         businessName: user.businessName,
@@ -52,7 +53,6 @@ router.get('/:token', async (req, res) => {
         email: user.email,
         address: user.address,
         brandColor: user.brandColor,
-        templateStyle: user.templateStyle,
       },
       expired,
     });
@@ -88,9 +88,7 @@ router.put('/:token/respond', async (req, res) => {
     };
 
     if (response === 'declined' && reason) {
-      updateFields.notes = existing.notes
-        ? `${existing.notes}\n\n---\nClient decline reason: ${reason}`
-        : `Client decline reason: ${reason}`;
+      updateFields.declineReason = reason;
     }
 
     const result = await Quote.findOneAndUpdate(

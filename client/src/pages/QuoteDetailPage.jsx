@@ -287,10 +287,15 @@ export default function QuoteDetailPage() {
       {/* Status banner for non-draft */}
       {!isDraft && banner && (
         <div className={`mb-5 px-4 py-3 rounded-lg border text-sm ${banner.bg}`}>
-          {banner.text}
-          {displayStatus === 'viewed' && quote.viewedAt && ` (${formatDate(quote.viewedAt)})`}
-          {(displayStatus === 'approved' || displayStatus === 'declined') && quote.respondedAt && ` (${formatDate(quote.respondedAt)})`}
-          {displayStatus === 'expired' && quote.expiresAt && ` (${formatDate(quote.expiresAt)})`}
+          <p>
+            {banner.text}
+            {displayStatus === 'viewed' && quote.viewedAt && ` (${formatDate(quote.viewedAt)})`}
+            {(displayStatus === 'approved' || displayStatus === 'declined') && quote.respondedAt && ` (${formatDate(quote.respondedAt)})`}
+            {displayStatus === 'expired' && quote.expiresAt && ` (${formatDate(quote.expiresAt)})`}
+          </p>
+          {displayStatus === 'declined' && quote.declineReason && (
+            <p className="mt-1.5 text-sm opacity-80">Reason: {quote.declineReason}</p>
+          )}
         </div>
       )}
 

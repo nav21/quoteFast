@@ -1,6 +1,7 @@
 import express from 'express';
 import Anthropic from '@anthropic-ai/sdk';
 import Quote from '../models/Quote.js';
+import User from '../models/User.js';
 import ServiceItem from '../models/ServiceItem.js';
 import auth from '../middleware/auth.js';
 
@@ -203,6 +204,9 @@ router.post('/', async (req, res) => {
 
     const quoteNumber = (lastQuote?.quoteNumber || 0) + 1;
 
+    // Snapshot the user's current template style onto the quote
+    const currentUser = await User.findById(req.user._id).select('templateStyle').lean();
+
     const quoteData = {
       userId: req.user._id,
       quoteNumber,
@@ -216,6 +220,7 @@ router.post('/', async (req, res) => {
       taxRate,
       total,
       notes,
+      templateStyle: currentUser?.templateStyle || 'clean-minimal',
       ...(expiresAt && { expiresAt }),
       ...(status && { status }),
     };

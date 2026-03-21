@@ -912,7 +912,7 @@ export default function QuoteViewPage() {
 
   const alreadyResponded = quote.respondedAt && (quote.status === 'approved' || quote.status === 'declined');
   const isActive = !expired && !alreadyResponded;
-  const templateStyle = business?.templateStyle || 'clean-minimal';
+  const templateStyle = quote?.templateStyle || 'clean-minimal';
 
   const actionProps = {
     isActive, responding, error,
