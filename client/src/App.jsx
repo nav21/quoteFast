@@ -11,6 +11,7 @@ import QuoteViewPage from './pages/QuoteViewPage.jsx';
 import SettingsPage from './pages/SettingsPage.jsx';
 import ServicesPage from './pages/ServicesPage.jsx';
 import QuoteDetailPage from './pages/QuoteDetailPage.jsx';
+import VerifyEmailPage from './pages/VerifyEmailPage.jsx';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             <Route path="/quote/:shareToken" element={<QuoteViewPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
+            <Route path="/verify-email" element={<VerifyEmailPage />} />
             <Route path="/onboarding" element={
               <ProtectedRoute>
                 <OnboardingPage />

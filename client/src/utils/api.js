@@ -15,8 +15,10 @@ export const api = {
     });
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ message: 'Request failed' }));
-      throw new Error(error.message);
+      const errorData = await response.json().catch(() => ({ message: 'Request failed' }));
+      const error = new Error(errorData.message);
+      if (errorData.requiresVerification) error.requiresVerification = true;
+      throw error;
     }
 
     return response.json();

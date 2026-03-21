@@ -1,16 +1,23 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import AuthLayout from '../components/AuthLayout.jsx';
 
 export default function LoginPage() {
-  const { user, login, loading: authLoading } = useAuth();
+  const { user, login, resendVerification, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [needsVerification, setNeedsVerification] = useState(false);
+  const [verifyEmail, setVerifyEmail] = useState('');
+  const [resending, setResending] = useState(false);
+  const [resendSuccess, setResendSuccess] = useState(false);
+
+  const justVerified = searchParams.get('verified') === 'true';
 
   useEffect(() => {
     if (user) {
@@ -40,16 +47,68 @@ export default function LoginPage() {
       const loggedInUser = await login(email.trim(), password);
       navigate(loggedInUser.onboardingCompleted ? '/dashboard' : '/onboarding', { replace: true });
     } catch (err) {
-      setError(err.message || 'Unable to log in. Please try again.');
+      if (err.requiresVerification) {
+        setNeedsVerification(true);
+        setVerifyEmail(email.trim());
+        setError('');
+      } else {
+        setError(err.message || 'Unable to log in. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
   };
 
+  const handleResend = async () => {
+    setResending(true);
+    setResendSuccess(false);
+    try {
+      await resendVerification(verifyEmail);
+      setResendSuccess(true);
+    } catch (err) {
+      // Silently handle
+    } finally {
+      setResending(false);
+    }
+  };
+
+  useEffect(() => {
+    if (justVerified) {
+      const timeout = setTimeout(() => {
+        setSearchParams({}, { replace: true });
+      }, 5000);
+      return () => clearTimeout(timeout);
+    }
+  }, [justVerified, setSearchParams]);
+
   return (
     <AuthLayout>
       <form onSubmit={handleSubmit} noValidate>
         <h2 className="font-display text-xl text-navy mb-6">Welcome back</h2>
+
+        {justVerified && (
+          <div className="mb-5 px-4 py-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm">
+            Email verified! You can now log in.
+          </div>
+        )}
+
+        {needsVerification && (
+          <div className="mb-5 px-4 py-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-sm">
+            <p className="mb-2">Please verify your email before logging in.</p>
+            {resendSuccess ? (
+              <p className="text-emerald-700 text-xs">Verification email resent!</p>
+            ) : (
+              <button
+                type="button"
+                onClick={handleResend}
+                disabled={resending}
+                className="text-xs text-gold-dark font-medium hover:text-gold transition-colors disabled:opacity-50 cursor-pointer"
+              >
+                {resending ? 'Sending...' : 'Resend verification email'}
+              </button>
+            )}
+          </div>
+        )}
 
         {error && (
           <div className="mb-5 px-4 py-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">

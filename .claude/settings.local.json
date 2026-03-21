@@ -9,7 +9,16 @@
       "Bash(for dir:*)",
       "Bash(find:*)",
       "Bash(npx vite:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(netstat -ano)",
+      "Bash(taskkill:*)",
+      "Bash(grep -E \"\\\\.\\(js|ts\\)$\")",
+      "Bash(bash \"C:\\\\Users\\\\navsh\\\\.claude\\\\plugins\\\\cache\\\\claude-plugins-official\\\\superpowers\\\\5.0.5\\\\skills\\\\brainstorming\\\\scripts\\\\start-server.sh\" --project-dir \"C:\\\\Users\\\\navsh\\\\Documents\\\\quoteGenerator\" 2>&1)",
+      "Bash(bash \"C:\\\\Users\\\\navsh\\\\.claude\\\\plugins\\\\cache\\\\claude-plugins-official\\\\superpowers\\\\5.0.5\\\\skills\\\\brainstorming\\\\scripts\\\\stop-server.sh\" \"C:\\\\Users\\\\navsh\\\\Documents\\\\quoteGenerator\\\\.superpowers\\\\brainstorm\\\\79-1773949029\" 2>&1)",
+      "Bash(npx playwright:*)",
+      "Bash(grep -r \"email\\\\|mail\\\\|nodemailer\" /c/Users/navsh/Documents/quoteGenerator/server --include=*.js)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }

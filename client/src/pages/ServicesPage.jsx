@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { api } from '../utils/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import CustomSelect from '../components/CustomSelect.jsx';
@@ -12,6 +12,49 @@ const EMPTY_SERVICE = {
   unit: 'flat rate',
   category: '',
 };
+
+function CategoryInput({ value, onChange, categories }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const filtered = categories.filter(c =>
+    c.toLowerCase().includes((value || '').toLowerCase()) && c !== value
+  );
+
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
+  return (
+    <div className="relative" ref={ref}>
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => { onChange(e.target.value); setOpen(true); }}
+        onFocus={() => setOpen(true)}
+        placeholder="Category (optional)"
+        className="w-full h-11 px-4 rounded-lg border border-navy/20 bg-cream/50 text-navy placeholder:text-navy/30 outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 text-sm"
+      />
+      {open && filtered.length > 0 && (
+        <div className="absolute z-10 top-full left-0 right-0 mt-1 bg-white rounded-lg border border-navy/15 shadow-lg max-h-40 overflow-y-auto">
+          {filtered.map(cat => (
+            <button
+              key={cat}
+              type="button"
+              onClick={() => { onChange(cat); setOpen(false); }}
+              className="w-full text-left px-4 py-2.5 text-sm text-navy hover:bg-cream/80 transition-colors cursor-pointer first:rounded-t-lg last:rounded-b-lg"
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function ServicesPage() {
   const { user } = useAuth();
@@ -47,6 +90,13 @@ export default function ServicesPage() {
       groups[cat].push(s);
     });
     return Object.entries(groups).sort(([a], [b]) => a.localeCompare(b));
+  }, [services]);
+
+  // Unique category names for the combobox
+  const existingCategories = useMemo(() => {
+    const cats = new Set();
+    services.forEach(s => { if (s.category) cats.add(s.category); });
+    return [...cats].sort();
   }, [services]);
 
   // Add service
@@ -199,12 +249,10 @@ export default function ServicesPage() {
                 className="h-11 w-32"
               />
             </div>
-            <input
-              type="text"
+            <CategoryInput
               value={addForm.category}
-              onChange={(e) => setAddForm(f => ({ ...f, category: e.target.value }))}
-              placeholder="Category (e.g. General)"
-              className="w-full h-11 px-4 rounded-lg border border-navy/20 bg-cream/50 text-navy placeholder:text-navy/30 outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 text-sm"
+              onChange={(val) => setAddForm(f => ({ ...f, category: val }))}
+              categories={existingCategories}
             />
             <div className="flex gap-2 pt-1">
               <button
@@ -292,12 +340,10 @@ export default function ServicesPage() {
                           className="h-11 w-32"
                         />
                       </div>
-                      <input
-                        type="text"
+                      <CategoryInput
                         value={editForm.category}
-                        onChange={(e) => setEditForm(f => ({ ...f, category: e.target.value }))}
-                        placeholder="Category"
-                        className="w-full h-11 px-4 rounded-lg border border-navy/20 bg-cream/50 text-navy placeholder:text-navy/30 outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 text-sm"
+                        onChange={(val) => setEditForm(f => ({ ...f, category: val }))}
+                        categories={existingCategories}
                       />
                       <label className="flex items-center gap-2 cursor-pointer">
                         <input

@@ -128,7 +128,7 @@ export default function AppLayout() {
       </header>
 
       {/* Main Content */}
-      <main className="pt-2">
+      <main className="pt-16">
         <Outlet />
       </main>
     </div>

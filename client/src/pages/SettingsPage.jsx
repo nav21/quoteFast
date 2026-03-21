@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
+import { formatPhone } from '../utils/formatPhone.js';
 
 const PRESET_COLORS = [
   { name: 'Navy', value: '#1B2A4A' },
@@ -16,6 +17,9 @@ const TEMPLATES = [
   { id: 'clean-minimal', name: 'Clean Minimal', description: 'Lots of whitespace, thin lines, modern feel' },
   { id: 'bold-modern', name: 'Bold Modern', description: 'Color header, bold type, strong presence' },
   { id: 'classic-professional', name: 'Classic Professional', description: 'Traditional layout, serif accents, timeless' },
+  { id: 'compact-estimate', name: 'Compact Estimate', description: 'Dense layout, no-frills, quick estimates' },
+  { id: 'executive-proposal', name: 'Executive Proposal', description: 'Premium presentation for big jobs' },
+  { id: 'friendly-approachable', name: 'Friendly & Approachable', description: 'Warm, casual, great for residential' },
 ];
 
 function TemplatePreview({ template, brandColor, selected }) {
@@ -76,6 +80,114 @@ function TemplatePreview({ template, brandColor, selected }) {
     );
   }
 
+  if (template.id === 'compact-estimate') {
+    return (
+      <div className="w-full aspect-[3/4] bg-white rounded border border-navy/10 p-3 flex flex-col">
+        {/* Tight header: name left, number right, heavy border */}
+        <div className="flex justify-between items-center pb-1.5 mb-2" style={{ borderBottom: '2px solid #222' }}>
+          <div className="w-10 h-1.5 bg-[#222] rounded-sm" />
+          <div className="w-8 h-1 bg-navy/20 rounded-full" />
+        </div>
+        {/* Client bar */}
+        <div className="bg-[#f5f5f5] border border-[#e5e5e5] px-1.5 py-1 mb-2">
+          <div className="w-12 h-1 bg-navy/15 rounded-full mb-0.5" />
+          <div className="w-8 h-0.5 bg-navy/8 rounded-full" />
+        </div>
+        {/* Table rows */}
+        <div className="flex-1 space-y-1">
+          {[1, 2, 3].map(i => (
+            <div key={i} className="flex justify-between items-center py-0.5" style={{ backgroundColor: i % 2 === 0 ? '#fafafa' : 'transparent' }}>
+              <div className="w-14 h-1 bg-navy/8 rounded-full" />
+              <div className="w-6 h-1 bg-navy/8 rounded-full" />
+            </div>
+          ))}
+        </div>
+        {/* Compact totals */}
+        <div className="pt-1.5 mt-auto flex justify-end" style={{ borderTop: '2px solid #222' }}>
+          <div className="w-10 h-1.5 bg-[#222] rounded-sm" style={{ opacity: 0.7 }} />
+        </div>
+      </div>
+    );
+  }
+
+  if (template.id === 'friendly-approachable') {
+    return (
+      <div className="w-full aspect-[3/4] bg-white rounded border border-navy/10 p-3 flex flex-col">
+        {/* Header: business name left, green pill right */}
+        <div className="flex justify-between items-start mb-2">
+          <div className="w-10 h-1.5 bg-navy/70 rounded-full" />
+          <div className="w-8 h-2 rounded-full bg-emerald-400" />
+        </div>
+        {/* Gradient greeting area */}
+        <div className="rounded-md px-2 py-2 mb-2" style={{ background: 'linear-gradient(135deg, #e0e7ff 0%, #ede9fe 100%)' }}>
+          <div className="w-12 h-1 bg-navy/20 rounded-full mb-1" />
+          <div className="w-16 h-0.5 bg-navy/10 rounded-full" />
+        </div>
+        {/* Card line items */}
+        <div className="flex-1 space-y-1">
+          {[1, 2, 3].map(i => (
+            <div key={i} className="flex justify-between items-center bg-[#f8f8f8] rounded px-1.5 py-1">
+              <div className="w-12 h-1 bg-navy/10 rounded-full" />
+              <div className="w-5 h-1 bg-navy/10 rounded-full" />
+            </div>
+          ))}
+        </div>
+        {/* Navy total bar */}
+        <div className="flex justify-between items-center bg-[#1B2A4A] rounded px-2 py-1.5 mt-auto">
+          <div className="w-8 h-1 bg-white/70 rounded-full" />
+          <div className="w-6 h-1 bg-white/90 rounded-full" />
+        </div>
+      </div>
+    );
+  }
+
+  if (template.id === 'executive-proposal') {
+    return (
+      <div className="w-full aspect-[3/4] rounded border border-navy/10 flex flex-col overflow-hidden" style={{ backgroundColor: '#FDFBF7' }}>
+        {/* Gold accent line */}
+        <div className="h-1 w-full" style={{ backgroundColor: brandColor }} />
+        <div className="p-3 flex-1 flex flex-col">
+          {/* Centered serif business name */}
+          <div className="text-center mb-1.5 pb-1.5" style={{ borderBottom: '1.5px solid #1B2A4A' }}>
+            <div className="w-14 h-1.5 mx-auto rounded-full bg-navy/30 mb-0.5" />
+            <div className="w-10 h-0.5 mx-auto bg-navy/10 rounded-full" />
+          </div>
+          {/* Double border */}
+          <div className="border-b border-navy/20 mb-2" />
+          {/* Two small info boxes */}
+          <div className="flex gap-1.5 mb-2">
+            <div className="flex-1 rounded p-1" style={{ backgroundColor: '#f4f2ed' }}>
+              <div className="w-6 h-0.5 bg-navy/15 rounded-full mb-0.5" />
+              <div className="w-8 h-0.5 bg-navy/10 rounded-full" />
+            </div>
+            <div className="flex-1 rounded p-1" style={{ backgroundColor: '#f4f2ed' }}>
+              <div className="w-6 h-0.5 bg-navy/15 rounded-full mb-0.5" />
+              <div className="w-8 h-0.5 bg-navy/10 rounded-full" />
+            </div>
+          </div>
+          {/* Table lines */}
+          <div className="flex-1 space-y-1.5">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="flex justify-between border-b border-navy/5 pb-1">
+                <div className="w-14 h-1 bg-navy/8 rounded-full" />
+                <div className="w-6 h-1 bg-navy/8 rounded-full" />
+              </div>
+            ))}
+          </div>
+          {/* Prominent dark total block */}
+          <div className="mx-auto w-16 rounded py-1 mt-auto mb-1" style={{ backgroundColor: '#1B2A4A' }}>
+            <div className="w-8 h-1.5 mx-auto bg-white/80 rounded-full" />
+          </div>
+          {/* Double border footer */}
+          <div className="border-t border-navy/15 mt-1" />
+          <div className="border-t border-navy/10 mt-0.5 pt-1">
+            <div className="w-12 h-0.5 mx-auto rounded-full" style={{ backgroundColor: brandColor, opacity: 0.4 }} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // classic-professional
   return (
     <div className="w-full aspect-[3/4] rounded border border-navy/10 flex flex-col p-3" style={{ backgroundColor: '#FDFBF7' }}>
@@ -112,7 +224,7 @@ export default function SettingsPage() {
     name: user?.name || '',
     businessName: user?.businessName || '',
     businessType: user?.businessType || '',
-    phone: user?.phone || '',
+    phone: formatPhone(user?.phone || ''),
     address: user?.address || '',
     email: user?.email || '',
     brandColor: user?.brandColor || '#1B2A4A',
@@ -214,7 +326,7 @@ export default function SettingsPage() {
                 id="phone"
                 type="tel"
                 value={form.phone}
-                onChange={(e) => update('phone', e.target.value)}
+                onChange={(e) => update('phone', formatPhone(e.target.value))}
                 placeholder="(555) 123-4567"
                 className="w-full h-12 px-4 rounded-lg border border-navy/20 bg-cream/50 text-navy placeholder:text-navy/30 outline-none focus:border-gold focus:ring-2 focus:ring-gold/20"
               />
@@ -276,7 +388,7 @@ export default function SettingsPage() {
 
             <div>
               <label className="block text-sm font-medium text-navy/70 mb-3">Quote Template</label>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {TEMPLATES.map((template) => {
                   const isSelected = form.templateStyle === template.id;
                   return (

@@ -34,9 +34,21 @@ export function AuthProvider({ children }) {
       method: 'POST',
       body: JSON.stringify({ name, email, password }),
     });
+
+    if (data.requiresVerification) {
+      return { requiresVerification: true };
+    }
+
     localStorage.setItem('token', data.token);
     setUser(data.user);
     return data.user;
+  }, []);
+
+  const resendVerification = useCallback(async (email) => {
+    return api.fetch('/api/auth/resend-verification', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    });
   }, []);
 
   const logout = useCallback(() => {
@@ -54,7 +66,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, signup, logout, updateProfile }}>
+    <AuthContext.Provider value={{ user, loading, login, signup, logout, updateProfile, resendVerification }}>
       {children}
     </AuthContext.Provider>
   );

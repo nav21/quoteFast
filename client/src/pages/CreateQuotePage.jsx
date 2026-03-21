@@ -83,11 +83,6 @@ export default function CreateQuotePage() {
     }
   };
 
-  const handleSkipToManual = () => {
-    setFallbackMode(true);
-    setCurrentStep(2);
-  };
-
   const handleReviewAndSend = () => {
     setError('');
     if (lineItems.length === 0) {
@@ -192,7 +187,7 @@ export default function CreateQuotePage() {
               onClientInfoChange={setClientInfo}
               jobDescription={jobDescription}
               onJobDescriptionChange={setJobDescription}
-              onSkipToManual={handleSkipToManual}
+              businessType={user?.businessType}
             />
           )}
           {currentStep === 2 && (

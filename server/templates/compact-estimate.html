@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    color: #333;
+    background: #fff;
+    font-size: 15.6px;
+    line-height: 1.4;
+  }
+
+  .container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px 0 12px;
+    border-bottom: 2px solid #222;
+    margin-bottom: 14px;
+  }
+
+  .business-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: #222;
+  }
+
+  .estimate-number {
+    font-size: 14.4px;
+    font-weight: 600;
+    color: #555;
+    text-align: right;
+  }
+
+  .meta-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #777;
+    margin-bottom: 14px;
+    line-height: 1.6;
+  }
+
+  .meta-row .left {
+    line-height: 1.6;
+  }
+
+  .meta-row .right {
+    text-align: right;
+    line-height: 1.6;
+  }
+
+  .client-section {
+    margin-bottom: 14px;
+    padding: 10px 14px;
+    background: #f7f7f7;
+    border: 1px solid #e5e5e5;
+  }
+
+  .client-section .label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #999;
+    font-weight: 600;
+    margin-bottom: 3px;
+  }
+
+  .client-name {
+    font-size: 15.6px;
+    font-weight: 600;
+    color: #222;
+  }
+
+  .client-details {
+    font-size: 12px;
+    color: #777;
+    margin-top: 2px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+  }
+
+  thead th {
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #555;
+    font-weight: 600;
+    padding: 6px 8px;
+    border-bottom: 1px solid #ccc;
+    background: #f5f5f5;
+  }
+
+  thead th:nth-child(2),
+  thead th:nth-child(4),
+  thead th:last-child {
+    text-align: right;
+  }
+
+  thead th:nth-child(3) {
+    text-align: center;
+  }
+
+  tbody tr:nth-child(even) {
+    background: #fafafa;
+  }
+
+  tbody td {
+    padding: 7px 8px;
+    border-bottom: 1px solid #eee;
+    font-size: 13.2px;
+  }
+
+  tbody td:nth-child(2),
+  tbody td:nth-child(4),
+  tbody td:last-child {
+    text-align: right;
+  }
+
+  tbody td:nth-child(3) {
+    text-align: center;
+    color: #999;
+    font-size: 12px;
+  }
+
+  .totals {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+  }
+
+  .totals-table {
+    width: 200px;
+  }
+
+  .totals-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-size: 13.2px;
+    color: #555;
+  }
+
+  .totals-row.total {
+    border-top: 2px solid #222;
+    margin-top: 4px;
+    padding-top: 8px;
+    font-size: 16.8px;
+    font-weight: 700;
+    color: #222;
+  }
+
+  .notes-section {
+    margin-bottom: 16px;
+  }
+
+  .notes-section .label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 4px;
+  }
+
+  .notes-section p {
+    font-size: 12px;
+    color: #777;
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  .terms-box {
+    margin-top: 10px;
+    padding: 10px 14px;
+    border: 1px dashed #ccc;
+    font-size: 11px;
+    color: #999;
+    line-height: 1.5;
+  }
+
+  .terms-box .terms-title {
+    font-weight: 600;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #777;
+    margin-bottom: 3px;
+    font-style: normal;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 14px 0;
+    border-top: 1px solid #eee;
+    margin-top: 10px;
+  }
+
+  .footer p {
+    font-size: 11px;
+    color: #999;
+  }
+
+  .footer a {
+    color: #555;
+    text-decoration: none;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="business-name">{{businessName}}</div>
+      <div class="estimate-number">ESTIMATE #{{quoteNumber}}</div>
+    </div>
+
+    <div class="meta-row">
+      <div class="left">
+        {{businessEmail}}<br>
+        {{businessPhone}}<br>
+        {{businessAddress}}
+      </div>
+      <div class="right">
+        Date: {{quoteDate}}<br>
+        Valid until: {{expiresDate}}
+      </div>
+    </div>
+
+    <div class="client-section">
+      <div class="label">Prepared For</div>
+      <div class="client-name">{{clientName}}</div>
+      <div class="client-details">{{clientEmail}} {{clientPhone}}</div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 42%">Description</th>
+          <th style="width: 10%">Qty</th>
+          <th style="width: 13%">Unit</th>
+          <th style="width: 17%">Unit Price</th>
+          <th style="width: 18%">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#lineItems}}
+        <tr>
+          <td>{{description}}</td>
+          <td>{{quantity}}</td>
+          <td>{{unit}}</td>
+          <td>{{unitPrice}}</td>
+          <td>{{amount}}</td>
+        </tr>
+        {{/lineItems}}
+      </tbody>
+    </table>
+
+    <div class="totals">
+      <div class="totals-table">
+        <div class="totals-row">
+          <span>Subtotal</span>
+          <span>{{subtotal}}</span>
+        </div>
+        <div class="totals-row">
+          <span>Tax ({{taxRate}}%)</span>
+          <span>{{tax}}</span>
+        </div>
+        <div class="totals-row total">
+          <span>Total</span>
+          <span>{{total}}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="notes-section">
+      <div class="label">Notes</div>
+      <p>{{notes}}</p>
+      <div class="terms-box">
+        <div class="terms-title">Terms & Conditions</div>
+        This estimate is valid for 30 days from the date of issue. Payment is due upon completion unless otherwise agreed. Prices are subject to change if scope changes.
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>View and respond online: <a href="{{shareUrl}}">{{shareUrl}}</a></p>
+    </div>
+  </div>
+</body>
+</html>

@@ -25,6 +25,10 @@ const STATUS_STYLES = {
   expired: 'bg-orange-100 text-orange-700',
 };
 
+const STATUS_LABELS = {
+  ready: 'Ready to Send',
+};
+
 function getDisplayStatus(quote) {
   if (
     quote.expiresAt &&
@@ -39,7 +43,7 @@ function getDisplayStatus(quote) {
 function StatusBadge({ status }) {
   return (
     <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold capitalize ${STATUS_STYLES[status] || STATUS_STYLES.draft}`}>
-      {status}
+      {STATUS_LABELS[status] || status}
     </span>
   );
 }
@@ -103,9 +107,8 @@ export default function DashboardPage() {
     ).length;
 
     const approved = quotesWithStatus.filter(q => q.displayStatus === 'approved').length;
-    const declined = quotesWithStatus.filter(q => q.displayStatus === 'declined').length;
-    const decisions = approved + declined;
-    const approvalRate = decisions > 0 ? Math.round((approved / decisions) * 100) : null;
+    const total = quotesWithStatus.filter(q => q.displayStatus !== 'draft').length;
+    const approvalRate = total > 0 ? Math.round((approved / total) * 100) : null;
 
     const revenueWon = quotesWithStatus
       .filter(q => q.displayStatus === 'approved')
@@ -147,7 +150,7 @@ export default function DashboardPage() {
           options={[
             { value: 'all', label: 'All Quotes' },
             { value: 'draft', label: 'Draft' },
-            { value: 'ready', label: 'Ready' },
+            { value: 'ready', label: 'Ready to Send' },
             { value: 'sent', label: 'Sent' },
             { value: 'viewed', label: 'Viewed' },
             { value: 'approved', label: 'Approved' },

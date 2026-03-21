@@ -31,3 +31,13 @@ MONGODB_URI, ANTHROPIC_API_KEY, JWT_SECRET, FRONTEND_URL, PORT, SKIP_AI
 ## Deployment
 - Backend: Railway (root /server)
 - Frontend: Vercel (root /client, VITE_API_URL points to Railway)
+
+## Visual QA / Frontend Testing
+When verifying UI changes, write and run a Playwright script directly. Do NOT use Playwright MCP.
+
+Scripts should:
+- Launch a fresh browser context (no persistent session)
+- Capture console.error and console.warn
+- Take screenshots at key states
+- Fail loudly if any console errors are detected
+- Target localhost:5173 (or whatever the dev server port is)

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { BUSINESS_TYPE_GROUPS } from '../../data/defaultServices.js';
+import { formatPhone } from '../../utils/formatPhone.js';
 
 const TYPE_ICONS = {
   Plumbing: (
@@ -212,7 +213,7 @@ export default function Step1BusinessInfo({ data, onChange }) {
           id="phone"
           type="tel"
           value={data.phone}
-          onChange={(e) => update('phone', e.target.value)}
+          onChange={(e) => update('phone', formatPhone(e.target.value))}
           placeholder="(555) 123-4567"
           className="w-full h-12 px-4 text-base rounded-lg border border-navy/20 bg-cream/50 text-navy placeholder:text-navy/30 outline-none transition-all focus:border-gold focus:ring-2 focus:ring-gold/20"
         />

@@ -449,6 +449,332 @@ function ClassicProfessionalTemplate({ quote, business, brandColor, actionProps 
   );
 }
 
+// ─── COMPACT ESTIMATE TEMPLATE ───
+function CompactEstimateTemplate({ quote, business, brandColor, actionProps }) {
+  return (
+    <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+      <div className="p-6 sm:p-8">
+        {/* Header with heavy bottom border */}
+        <div className="flex justify-between items-start pb-3 mb-3" style={{ borderBottom: '2px solid #222' }}>
+          <h1 className="text-lg font-bold text-[#222]">
+            {business?.businessName || business?.name}
+          </h1>
+          <p className="text-sm font-semibold text-[#555]">ESTIMATE #{quote.quoteNumber}</p>
+        </div>
+
+        {/* Meta row: business details left, dates right */}
+        <div className="flex justify-between items-start text-[11px] text-[#777] leading-relaxed mb-3">
+          <div>
+            {business?.email && <p>{business.email}</p>}
+            {business?.phone && <p>{business.phone}</p>}
+            {business?.address && <p>{business.address}</p>}
+          </div>
+          <div className="text-right">
+            <p>Date: {formatDate(quote.createdAt)}</p>
+            {quote.expiresAt && <p>Valid until: {formatDate(quote.expiresAt)}</p>}
+          </div>
+        </div>
+
+        {/* Client */}
+        <div className="mb-4 px-3.5 py-2.5 bg-[#f7f7f7] border border-[#e5e5e5]">
+          <p className="text-[9px] uppercase tracking-[1px] text-[#999] font-semibold mb-0.5">Prepared For</p>
+          <p className="text-[13px] font-semibold text-[#222]">{quote.clientName}</p>
+          <p className="text-[11px] text-[#777]">
+            {quote.clientEmail}{quote.clientEmail && quote.clientPhone && ' '}{quote.clientPhone}
+          </p>
+        </div>
+
+        {/* Table — desktop */}
+        <div className="hidden sm:block mb-4">
+          <table className="w-full" style={{ borderCollapse: 'collapse' }}>
+            <thead>
+              <tr className="bg-[#f5f5f5]" style={{ borderBottom: '1px solid #ccc' }}>
+                <th className="text-left text-[10px] uppercase tracking-wider text-[#555] font-semibold py-1.5 px-2" style={{ width: '42%' }}>Description</th>
+                <th className="text-right text-[10px] uppercase tracking-wider text-[#555] font-semibold py-1.5 px-2" style={{ width: '10%' }}>Qty</th>
+                <th className="text-center text-[10px] uppercase tracking-wider text-[#555] font-semibold py-1.5 px-2" style={{ width: '13%' }}>Unit</th>
+                <th className="text-right text-[10px] uppercase tracking-wider text-[#555] font-semibold py-1.5 px-2" style={{ width: '17%' }}>Unit Price</th>
+                <th className="text-right text-[10px] uppercase tracking-wider text-[#555] font-semibold py-1.5 px-2" style={{ width: '18%' }}>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {quote.lineItems.map((item, i) => (
+                <tr key={i} style={{ backgroundColor: i % 2 === 1 ? '#fafafa' : 'transparent', borderBottom: '1px solid #eee' }}>
+                  <td className="py-1.5 px-2 text-xs text-[#333]">{item.description}</td>
+                  <td className="py-1.5 px-2 text-right text-xs text-[#333]">{item.quantity}</td>
+                  <td className="py-1.5 px-2 text-center text-[11px] text-[#999]">{item.unit}</td>
+                  <td className="py-1.5 px-2 text-right text-xs text-[#333]">{formatCurrency(item.unitPrice)}</td>
+                  <td className="py-1.5 px-2 text-right text-xs text-[#333]">{formatCurrency(item.amount)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <MobileLineItems items={quote.lineItems} brandColor={brandColor} />
+
+        {/* Totals */}
+        <div className="flex justify-end mb-5">
+          <div className="w-48">
+            <div className="flex justify-between py-1 text-xs text-[#555]">
+              <span>Subtotal</span>
+              <span>{formatCurrency(quote.subtotal)}</span>
+            </div>
+            {quote.taxRate > 0 && (
+              <div className="flex justify-between py-1 text-xs text-[#555]">
+                <span>Tax ({quote.taxRate}%)</span>
+                <span>{formatCurrency(quote.tax)}</span>
+              </div>
+            )}
+            <div className="flex justify-between pt-2 mt-1 text-[15px] font-bold text-[#222]" style={{ borderTop: '2px solid #222' }}>
+              <span>Total</span>
+              <span>{formatCurrency(quote.total)}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Notes & Terms */}
+        {quote.notes && (
+          <div className="mb-4">
+            <p className="text-xs font-semibold text-[#555] mb-1">Notes</p>
+            <p className="text-[11px] text-[#777] italic leading-relaxed whitespace-pre-line">{quote.notes}</p>
+            <div className="mt-2.5 p-3 border border-dashed border-[#ccc]">
+              <p className="text-[9px] uppercase tracking-wider text-[#777] font-semibold mb-1">Terms & Conditions</p>
+              <p className="text-[10px] text-[#999] leading-relaxed">
+                This estimate is valid for 30 days from the date of issue. Payment is due upon completion unless otherwise agreed.
+              </p>
+            </div>
+          </div>
+        )}
+
+        <ActionButtons {...actionProps} />
+      </div>
+    </div>
+  );
+}
+
+// ─── EXECUTIVE PROPOSAL TEMPLATE ───
+function ExecutiveProposalTemplate({ quote, business, brandColor, actionProps }) {
+  return (
+    <div className="bg-[#FDFBF7] rounded-2xl shadow-lg overflow-hidden">
+      {/* Gold accent line at top */}
+      <div className="h-1" style={{ backgroundColor: brandColor }} />
+
+      <div className="p-6 sm:p-8">
+        {/* Centered header with business name */}
+        <div className="text-center pb-4 mb-1" style={{ borderBottom: '2px solid #1B2A4A' }}>
+          <h1 className="font-display text-[26px] sm:text-[30px] font-bold text-[#1B2A4A] tracking-[2px] uppercase">
+            {business?.businessName || business?.name}
+          </h1>
+          <p className="text-[11px] text-[#999] tracking-[3px] uppercase mt-1.5">
+            Licensed &bull; Insured &bull; Professional
+          </p>
+        </div>
+        {/* Double border bottom */}
+        <div className="border-b border-[#1B2A4A] mb-7" />
+
+        {/* Centered Proposal label + number */}
+        <div className="text-center mb-7">
+          <p className="font-display text-[24px] font-normal text-[#1B2A4A] tracking-[1px]">Proposal</p>
+          <p className="font-display text-[16px] mt-1" style={{ color: brandColor }}>#{quote.quoteNumber}</p>
+          <div className="text-[12px] text-[#777] mt-1.5 leading-relaxed">
+            <p>{formatDate(quote.createdAt)}</p>
+            {quote.expiresAt && <p>Valid until: {formatDate(quote.expiresAt)}</p>}
+          </div>
+        </div>
+
+        {/* Two-column info cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-7">
+          <div className="px-5 py-4 rounded-md" style={{ backgroundColor: '#f4f2ed' }}>
+            <p className="text-[10px] uppercase tracking-[1.5px] text-[#999] font-semibold mb-2">Prepared For</p>
+            <p className="font-display text-[15px] font-semibold text-[#1B2A4A]">{quote.clientName}</p>
+            <div className="text-[11px] text-[#666] mt-1 leading-relaxed">
+              {quote.clientEmail && <p>{quote.clientEmail}</p>}
+              {quote.clientPhone && <p>{quote.clientPhone}</p>}
+            </div>
+          </div>
+          <div className="px-5 py-4 rounded-md" style={{ backgroundColor: '#f4f2ed' }}>
+            <p className="text-[10px] uppercase tracking-[1.5px] text-[#999] font-semibold mb-2">From</p>
+            <p className="font-display text-[15px] font-semibold text-[#1B2A4A]">{business?.businessName || business?.name}</p>
+            <div className="text-[11px] text-[#666] mt-1 leading-relaxed">
+              {business?.email && <p>{business.email}</p>}
+              {business?.phone && <p>{business.phone}</p>}
+              {business?.address && <p>{business.address}</p>}
+            </div>
+          </div>
+        </div>
+
+        {/* Scope of Work */}
+        {(quote.jobDescription || quote.notes) && (
+          <div className="mb-7 px-5 py-4 bg-[#FDFBF7]" style={{ borderLeft: `4px solid ${brandColor}` }}>
+            <p className="font-display text-[14px] font-semibold text-[#1B2A4A] mb-2">Scope of Work</p>
+            <p className="text-xs text-[#555] leading-relaxed whitespace-pre-line">
+              {quote.jobDescription || quote.notes}
+            </p>
+          </div>
+        )}
+
+        {/* Table — desktop */}
+        <div className="hidden sm:block mb-6">
+          <table className="w-full" style={{ borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ borderBottom: '2px solid #1B2A4A' }}>
+                <th className="text-left text-[10px] uppercase tracking-wider text-[#1B2A4A] font-bold pb-2.5 pr-2" style={{ width: '42%' }}>Description</th>
+                <th className="text-right text-[10px] uppercase tracking-wider text-[#1B2A4A] font-bold pb-2.5 px-2" style={{ width: '8%' }}>Qty</th>
+                <th className="text-right text-[10px] uppercase tracking-wider text-[#1B2A4A] font-bold pb-2.5 px-2" style={{ width: '15%' }}>Unit</th>
+                <th className="text-right text-[10px] uppercase tracking-wider text-[#1B2A4A] font-bold pb-2.5 px-2" style={{ width: '17%' }}>Unit Price</th>
+                <th className="text-right text-[10px] uppercase tracking-wider text-[#1B2A4A] font-bold pb-2.5 pl-2" style={{ width: '18%' }}>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {quote.lineItems.map((item, i) => (
+                <tr key={i} className="border-b border-[#e8e4de]" style={{ backgroundColor: i % 2 === 1 ? '#faf9f5' : 'transparent' }}>
+                  <td className="py-2.5 pr-2 text-xs text-[#1B2A4A]">{item.description}</td>
+                  <td className="py-2.5 px-2 text-right text-xs text-[#1B2A4A]">{item.quantity}</td>
+                  <td className="py-2.5 px-2 text-right text-[11px] text-[#888]">{item.unit}</td>
+                  <td className="py-2.5 px-2 text-right text-xs text-[#1B2A4A]">{formatCurrency(item.unitPrice)}</td>
+                  <td className="py-2.5 pl-2 text-right text-xs text-[#1B2A4A]">{formatCurrency(item.amount)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <MobileLineItems items={quote.lineItems} brandColor={brandColor} />
+
+        {/* Subtotal / Tax rows */}
+        <div className="flex justify-center mb-4">
+          <div className="w-56">
+            <div className="flex justify-between py-1.5 text-xs text-[#777]">
+              <span>Subtotal</span>
+              <span>{formatCurrency(quote.subtotal)}</span>
+            </div>
+            {quote.taxRate > 0 && (
+              <div className="flex justify-between py-1.5 text-xs text-[#777]">
+                <span>Tax ({quote.taxRate}%)</span>
+                <span>{formatCurrency(quote.tax)}</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Prominent centered navy total block */}
+        <div className="mx-auto max-w-[280px] bg-[#1B2A4A] text-white text-center rounded-md py-5 px-8 mb-7">
+          <p className="text-[11px] uppercase tracking-[2px] opacity-70 mb-1">Total Due</p>
+          <p className="font-display text-[28px] font-bold">{formatCurrency(quote.total)}</p>
+        </div>
+
+        {/* Notes */}
+        {quote.notes && (
+          <div className="mb-6 px-5 py-4 rounded-md" style={{ backgroundColor: '#f4f2ed' }}>
+            <p className="text-[10px] uppercase tracking-[1.5px] text-[#999] font-semibold mb-2">Notes & Terms</p>
+            <p className="text-xs text-[#555] leading-relaxed whitespace-pre-line">{quote.notes}</p>
+          </div>
+        )}
+
+        <ActionButtons {...actionProps} />
+      </div>
+
+      {/* Double-line navy footer border */}
+      <div className="mx-6 sm:mx-8 border-t-2 border-[#1B2A4A] mt-0 mb-0" />
+      <div className="mx-6 sm:mx-8 border-t border-[#1B2A4A] mt-1 pt-4 pb-6 text-center">
+        <p className="text-[11px] text-[#999]">Powered by QuoteFast</p>
+      </div>
+    </div>
+  );
+}
+
+// ─── FRIENDLY & APPROACHABLE TEMPLATE ───
+function FriendlyApproachableTemplate({ quote, business, brandColor, actionProps }) {
+  return (
+    <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+      <div className="p-6 sm:p-8">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-7">
+          <div>
+            <h1 className="text-[22px] font-bold text-[#1B2A4A]">
+              {business?.businessName || business?.name}
+            </h1>
+            <div className="text-[11px] text-[#777] mt-1 leading-relaxed">
+              {business?.email && <p>{business.email}</p>}
+              {business?.phone && <p>{business.phone}</p>}
+              {business?.address && <p>{business.address}</p>}
+            </div>
+          </div>
+          <div className="sm:text-right">
+            <span className="inline-block bg-emerald-500 text-white text-[11px] font-bold px-3 py-1 rounded-full">
+              Quote #{quote.quoteNumber}
+            </span>
+            <div className="text-[11px] text-[#777] mt-2 leading-loose">
+              <p>Date: {formatDate(quote.createdAt)}</p>
+              {quote.expiresAt && <p>Valid until: {formatDate(quote.expiresAt)}</p>}
+            </div>
+          </div>
+        </div>
+
+        {/* Client */}
+        <div className="mb-6">
+          <p className="text-[10px] uppercase tracking-[1px] text-[#999] font-semibold mb-1.5">Prepared for</p>
+          <p className="text-[15px] font-semibold text-[#1B2A4A]">{quote.clientName}</p>
+          <p className="text-[11px] text-[#777] mt-0.5">
+            {quote.clientEmail}{quote.clientEmail && quote.clientPhone && ' '}{quote.clientPhone}
+          </p>
+        </div>
+
+        {/* Greeting card */}
+        <div className="rounded-xl px-6 py-5 mb-7" style={{ background: 'linear-gradient(135deg, #e0e7ff 0%, #ede9fe 50%, #e0e7ff 100%)' }}>
+          <h2 className="text-lg font-bold text-[#1B2A4A] mb-1">Hi {quote.clientName}!</h2>
+          <p className="text-[13px] text-[#4B5563] leading-relaxed">
+            Thanks for reaching out! Here's a breakdown of the work we discussed. Take a look and let us know if you have any questions.
+          </p>
+        </div>
+
+        {/* Card-style line items (all screen sizes) */}
+        <div className="space-y-2.5 mb-6">
+          {quote.lineItems.map((item, i) => (
+            <div key={i} className="flex justify-between items-center p-4 rounded-xl" style={{ backgroundColor: '#f8f8f8' }}>
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold text-sm text-[#1B2A4A] mb-0.5">{item.description}</p>
+                <p className="text-[11px] text-[#777]">{item.quantity} {item.unit} &times; {formatCurrency(item.unitPrice)}</p>
+              </div>
+              <p className="font-bold text-[15px] text-[#1B2A4A] ml-4 shrink-0">{formatCurrency(item.amount)}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Totals */}
+        <div className="flex justify-end mb-2">
+          <div className="w-56">
+            <div className="flex justify-between py-1.5 text-xs text-[#777]">
+              <span>Subtotal</span>
+              <span>{formatCurrency(quote.subtotal)}</span>
+            </div>
+            {quote.taxRate > 0 && (
+              <div className="flex justify-between py-1.5 text-xs text-[#777]">
+                <span>Tax ({quote.taxRate}%)</span>
+                <span>{formatCurrency(quote.tax)}</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Navy total bar */}
+        <div className="flex justify-between items-center px-5 py-3.5 rounded-xl mb-7" style={{ backgroundColor: '#1B2A4A' }}>
+          <span className="text-white font-bold text-base">Your total</span>
+          <span className="text-white font-bold text-lg">{formatCurrency(quote.total)}</span>
+        </div>
+
+        {/* Notes */}
+        {quote.notes && (
+          <div className="mb-6 px-5 py-4 rounded-lg" style={{ backgroundColor: '#FAFAF8' }}>
+            <p className="text-[10px] uppercase tracking-[1px] text-[#999] font-semibold mb-2">Notes & Terms</p>
+            <p className="text-xs text-[#555] leading-relaxed whitespace-pre-line">{quote.notes}</p>
+          </div>
+        )}
+
+        <ActionButtons {...actionProps} />
+      </div>
+    </div>
+  );
+}
+
 // ─── MAIN PAGE ───
 export default function QuoteViewPage() {
   const { shareToken } = useParams();
@@ -597,6 +923,9 @@ export default function QuoteViewPage() {
   };
 
   const TemplateComponent =
+    templateStyle === 'friendly-approachable' ? FriendlyApproachableTemplate :
+    templateStyle === 'compact-estimate' ? CompactEstimateTemplate :
+    templateStyle === 'executive-proposal' ? ExecutiveProposalTemplate :
     templateStyle === 'bold-modern' ? BoldModernTemplate :
     templateStyle === 'classic-professional' ? ClassicProfessionalTemplate :
     CleanMinimalTemplate;

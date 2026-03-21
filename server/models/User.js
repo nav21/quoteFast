@@ -59,8 +59,19 @@ const userSchema = new mongoose.Schema({
   templateStyle: {
     type: String,
     trim: true,
-    enum: ['clean-minimal', 'bold-modern', 'classic-professional'],
+    enum: ['clean-minimal', 'bold-modern', 'classic-professional', 'compact-estimate', 'executive-proposal', 'friendly-approachable'],
     default: 'clean-minimal',
+  },
+  emailVerified: {
+    type: Boolean,
+    default: true,
+  },
+  emailVerificationToken: {
+    type: String,
+    index: { sparse: true },
+  },
+  emailVerificationExpires: {
+    type: Date,
   },
 }, {
   timestamps: true,

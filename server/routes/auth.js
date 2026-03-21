@@ -2,6 +2,10 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import auth from '../middleware/auth.js';
+import crypto from 'crypto';
+import { sendVerificationEmail } from '../utils/email.js';
+
+const EMAIL_VERIFICATION_ENABLED = process.env.ENABLE_EMAIL_VERIFICATION === 'true';
 
 const router = express.Router();
 
@@ -31,22 +35,51 @@ router.post('/signup', async (req, res) => {
     const { name, email, password, businessName, phone, businessType, taxRate } = req.body;
 
     const existingUser = await User.findOne({ email });
+
     if (existingUser) {
-      return res.status(400).json({ message: 'Email already registered' });
+      // If verification is enabled, allow re-signup over stale unverified accounts
+      if (
+        EMAIL_VERIFICATION_ENABLED &&
+        !existingUser.emailVerified &&
+        existingUser.emailVerificationExpires &&
+        existingUser.emailVerificationExpires < new Date()
+      ) {
+        await User.deleteOne({ _id: existingUser._id });
+      } else {
+        return res.status(400).json({ message: 'Email already registered' });
+      }
     }
 
-    const user = await User.create({
-      name,
-      email,
-      password,
-      businessName,
-      phone,
-      businessType,
-      taxRate,
-    });
+    const userData = { name, email, password, businessName, phone, businessType, taxRate };
 
+    if (EMAIL_VERIFICATION_ENABLED) {
+      userData.emailVerified = false;
+
+      const rawToken = crypto.randomBytes(16).toString('hex');
+      const hashedToken = crypto.createHash('sha256').update(rawToken).digest('hex');
+
+      userData.emailVerificationToken = hashedToken;
+      userData.emailVerificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+      const user = await User.create(userData);
+
+      try {
+        await sendVerificationEmail(email, rawToken);
+      } catch (emailErr) {
+        console.error('[auth] Failed to send verification email:', emailErr.message);
+        await User.deleteOne({ _id: user._id });
+        return res.status(500).json({ message: 'Failed to send verification email. Please try again.' });
+      }
+
+      return res.status(201).json({
+        message: 'Verification email sent. Please check your inbox.',
+        requiresVerification: true,
+      });
+    }
+
+    // Verification disabled — current behavior
+    const user = await User.create(userData);
     const token = generateToken(user._id);
-
     res.status(201).json({ token, user: serializeUser(user) });
   } catch (error) {
     if (error.name === 'ValidationError') {
@@ -76,9 +109,81 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
-    const token = generateToken(user._id);
+    if (EMAIL_VERIFICATION_ENABLED && !user.emailVerified) {
+      return res.status(403).json({
+        message: 'Please verify your email before logging in.',
+        requiresVerification: true,
+      });
+    }
 
+    const token = generateToken(user._id);
     res.json({ token, user: serializeUser(user) });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// POST /api/auth/verify-email
+router.post('/verify-email', async (req, res) => {
+  try {
+    const { token } = req.body;
+    if (!token) {
+      return res.status(400).json({ message: 'Verification token is required' });
+    }
+
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+    const user = await User.findOne({
+      emailVerificationToken: hashedToken,
+      emailVerificationExpires: { $gt: new Date() },
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid or expired verification link.' });
+    }
+
+    user.emailVerified = true;
+    user.emailVerificationToken = undefined;
+    user.emailVerificationExpires = undefined;
+    await user.save();
+
+    res.json({ message: 'Email verified successfully.' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// POST /api/auth/resend-verification
+router.post('/resend-verification', async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // Always return 200 to avoid email enumeration
+    const successMsg = { message: 'If that email is registered, a new verification link has been sent.' };
+
+    if (!email) return res.json(successMsg);
+
+    const user = await User.findOne({ email, emailVerified: false });
+    if (!user) return res.json(successMsg);
+
+    // Cooldown: skip if last token was generated less than 60s ago
+    if (
+      user.emailVerificationExpires &&
+      user.emailVerificationExpires.getTime() > Date.now() + 23 * 60 * 60 * 1000
+    ) {
+      return res.json(successMsg);
+    }
+
+    const rawToken = crypto.randomBytes(16).toString('hex');
+    const hashedToken = crypto.createHash('sha256').update(rawToken).digest('hex');
+
+    user.emailVerificationToken = hashedToken;
+    user.emailVerificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    await user.save();
+
+    await sendVerificationEmail(email, rawToken);
+
+    res.json(successMsg);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }

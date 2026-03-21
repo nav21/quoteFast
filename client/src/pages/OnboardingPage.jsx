@@ -191,6 +191,26 @@ export default function OnboardingPage() {
                 Back
               </button>
             )}
+            {currentStep === 4 && (
+              <button
+                type="button"
+                onClick={async () => {
+                  setSaving(true);
+                  try {
+                    await updateProfile({ onboardingCompleted: true });
+                    navigate('/dashboard', { replace: true });
+                  } catch (err) {
+                    setError(err.message || 'Something went wrong.');
+                  } finally {
+                    setSaving(false);
+                  }
+                }}
+                disabled={saving}
+                className="h-12 px-6 rounded-lg border border-navy/20 text-navy/60 font-medium text-sm hover:bg-navy/5 hover:text-navy transition-colors cursor-pointer disabled:opacity-50"
+              >
+                Skip
+              </button>
+            )}
             <button
               type="button"
               onClick={handleNext}

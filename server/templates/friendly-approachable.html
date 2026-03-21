@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    color: #1B2A4A;
+    background: #fff;
+    font-size: 15.6px;
+    line-height: 1.5;
+  }
+
+  .container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 30px;
+    padding-top: 32px;
+  }
+
+  .business-name {
+    font-size: 26.4px;
+    font-weight: 700;
+    color: #1B2A4A;
+  }
+
+  .business-details {
+    color: #777;
+    font-size: 13.2px;
+    margin-top: 4px;
+    line-height: 1.6;
+  }
+
+  .header-right {
+    text-align: right;
+  }
+
+  .quote-pill {
+    display: inline-block;
+    background: #22c55e;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 14px;
+    border-radius: 999px;
+    letter-spacing: 0.5px;
+  }
+
+  .quote-meta {
+    font-size: 13.2px;
+    color: #777;
+    margin-top: 8px;
+    line-height: 1.8;
+  }
+
+  .client-section {
+    margin-bottom: 24px;
+  }
+
+  .section-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #999;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .client-name {
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .client-details {
+    font-size: 13.2px;
+    color: #777;
+    margin-top: 2px;
+  }
+
+  .greeting-card {
+    background: linear-gradient(135deg, #e0e7ff 0%, #ede9fe 50%, #e0e7ff 100%);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 28px;
+  }
+
+  .greeting-card h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1B2A4A;
+    margin-bottom: 6px;
+  }
+
+  .greeting-card p {
+    font-size: 14.4px;
+    color: #4B5563;
+    line-height: 1.6;
+  }
+
+  .line-item-card {
+    background: #f8f8f8;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .line-item-left {
+    flex: 1;
+  }
+
+  .line-item-name {
+    font-size: 15.6px;
+    font-weight: 600;
+    color: #1B2A4A;
+    margin-bottom: 2px;
+  }
+
+  .line-item-meta {
+    font-size: 13.2px;
+    color: #777;
+  }
+
+  .line-item-price {
+    font-size: 16.8px;
+    font-weight: 700;
+    color: #1B2A4A;
+    text-align: right;
+    white-space: nowrap;
+    margin-left: 16px;
+  }
+
+  .totals {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    margin-bottom: 28px;
+  }
+
+  .totals-table {
+    width: 220px;
+  }
+
+  .totals-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-size: 14.4px;
+    color: #777;
+  }
+
+  .total-bar {
+    background: #1B2A4A;
+    border-radius: 10px;
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 28px;
+  }
+
+  .total-bar span {
+    color: #fff;
+    font-size: 19.2px;
+    font-weight: 700;
+  }
+
+  .notes-section {
+    margin-bottom: 28px;
+    padding: 16px 20px;
+    background: #FAFAF8;
+    border-radius: 8px;
+  }
+
+  .notes-section p {
+    font-size: 14.4px;
+    color: #555;
+    line-height: 1.7;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 20px 0;
+    border-top: 1px solid #f0f0f0;
+    margin-top: 16px;
+  }
+
+  .footer p {
+    font-size: 13.2px;
+    color: #999;
+  }
+
+  .footer a {
+    color: {{brandColor}};
+    text-decoration: none;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div>
+        <div class="business-name">{{businessName}}</div>
+        <div class="business-details">
+          {{businessEmail}}<br>
+          {{businessPhone}}<br>
+          {{businessAddress}}
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="quote-pill">Quote #{{quoteNumber}}</div>
+        <div class="quote-meta">
+          Date: {{quoteDate}}<br>
+          Valid until: {{expiresDate}}
+        </div>
+      </div>
+    </div>
+
+    <div class="client-section">
+      <div class="section-label">Prepared for</div>
+      <div class="client-name">{{clientName}}</div>
+      <div class="client-details">{{clientEmail}} {{clientPhone}}</div>
+    </div>
+
+    <div class="greeting-card">
+      <h2>Hi {{clientName}}!</h2>
+      <p>Thanks for reaching out! Here's a breakdown of the work we discussed. Take a look and let us know if you have any questions.</p>
+    </div>
+
+    {{#lineItems}}
+    <div class="line-item-card">
+      <div class="line-item-left">
+        <div class="line-item-name">{{description}}</div>
+        <div class="line-item-meta">{{quantity}} {{unit}} &times; {{unitPrice}}</div>
+      </div>
+      <div class="line-item-price">{{amount}}</div>
+    </div>
+    {{/lineItems}}
+
+    <div class="totals">
+      <div class="totals-table">
+        <div class="totals-row">
+          <span>Subtotal</span>
+          <span>{{subtotal}}</span>
+        </div>
+        <div class="totals-row">
+          <span>Tax ({{taxRate}}%)</span>
+          <span>{{tax}}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="total-bar">
+      <span>Your total</span>
+      <span>{{total}}</span>
+    </div>
+
+    <div class="notes-section">
+      <div class="section-label">Notes & Terms</div>
+      <p>{{notes}}</p>
+    </div>
+
+    <div class="footer">
+      <p>View and approve this quote online at:<br><a href="{{shareUrl}}">{{shareUrl}}</a></p>
+    </div>
+  </div>
+</body>
+</html>

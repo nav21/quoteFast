@@ -21,7 +21,7 @@ function EyeIcon({ open }) {
 }
 
 export default function SignupPage() {
-  const { user, signup, loading: authLoading } = useAuth();
+  const { user, signup, resendVerification, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -31,6 +31,10 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [verificationSent, setVerificationSent] = useState(false);
+  const [signupEmail, setSignupEmail] = useState('');
+  const [resending, setResending] = useState(false);
+  const [resendSuccess, setResendSuccess] = useState(false);
   useEffect(() => {
     if (user) {
       navigate(user.onboardingCompleted ? '/dashboard' : '/onboarding', { replace: true });
@@ -66,8 +70,12 @@ export default function SignupPage() {
 
     setLoading(true);
     try {
-      await signup({ name: name.trim(), email: email.trim(), password });
-      // useEffect will redirect to /onboarding once user state updates
+      const result = await signup({ name: name.trim(), email: email.trim(), password });
+      if (result?.requiresVerification) {
+        setSignupEmail(email.trim());
+        setVerificationSent(true);
+      }
+      // If no requiresVerification, useEffect redirects to /onboarding
     } catch (err) {
       setError(err.message || 'Unable to create account. Please try again.');
     } finally {
@@ -75,7 +83,59 @@ export default function SignupPage() {
     }
   };
 
+  const handleResend = async () => {
+    setResending(true);
+    setResendSuccess(false);
+    try {
+      await resendVerification(signupEmail);
+      setResendSuccess(true);
+    } catch (err) {
+      // Silently handle — the endpoint always returns 200
+    } finally {
+      setResending(false);
+    }
+  };
+
   const inputClasses = 'w-full h-12 px-4 text-base rounded-lg border border-navy/20 bg-cream/50 text-navy placeholder:text-navy/30 outline-none transition-all focus:border-gold focus:ring-2 focus:ring-gold/20';
+
+  if (verificationSent) {
+    return (
+      <AuthLayout>
+        <div className="text-center">
+          <div className="w-16 h-16 rounded-full bg-gold/10 flex items-center justify-center mx-auto mb-5">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8 text-gold-dark">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+            </svg>
+          </div>
+          <h2 className="font-display text-xl text-navy mb-2">Check your email</h2>
+          <p className="text-navy/60 text-sm leading-relaxed mb-6">
+            We sent a verification link to<br />
+            <strong className="text-navy">{signupEmail}</strong>
+          </p>
+
+          {resendSuccess && (
+            <div className="mb-4 px-4 py-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm">
+              Verification email resent!
+            </div>
+          )}
+
+          <button
+            onClick={handleResend}
+            disabled={resending}
+            className="text-sm text-gold-dark font-medium hover:text-gold transition-colors disabled:opacity-50 cursor-pointer"
+          >
+            {resending ? 'Sending...' : "Didn't get it? Resend email"}
+          </button>
+
+          <div className="mt-6 pt-5 border-t border-navy/10">
+            <Link to="/login" className="text-sm text-navy/60 hover:text-navy transition-colors">
+              Back to Log In
+            </Link>
+          </div>
+        </div>
+      </AuthLayout>
+    );
+  }
 
   return (
     <AuthLayout>
