@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { formatPhone } from '../utils/formatPhone.js';
 
@@ -83,17 +83,14 @@ function TemplatePreview({ template, brandColor, selected }) {
   if (template.id === 'compact-estimate') {
     return (
       <div className="w-full aspect-[3/4] bg-white rounded border border-navy/10 p-3 flex flex-col">
-        {/* Tight header: name left, number right, heavy border */}
-        <div className="flex justify-between items-center pb-1.5 mb-2" style={{ borderBottom: '2px solid #222' }}>
-          <div className="w-10 h-1.5 bg-[#222] rounded-sm" />
+        <div className="flex justify-between items-center pb-1.5 mb-2" style={{ borderBottom: `2px solid ${brandColor}` }}>
+          <div className="w-10 h-1.5 rounded-sm" style={{ backgroundColor: brandColor }} />
           <div className="w-8 h-1 bg-navy/20 rounded-full" />
         </div>
-        {/* Client bar */}
         <div className="bg-[#f5f5f5] border border-[#e5e5e5] px-1.5 py-1 mb-2">
           <div className="w-12 h-1 bg-navy/15 rounded-full mb-0.5" />
           <div className="w-8 h-0.5 bg-navy/8 rounded-full" />
         </div>
-        {/* Table rows */}
         <div className="flex-1 space-y-1">
           {[1, 2, 3].map(i => (
             <div key={i} className="flex justify-between items-center py-0.5" style={{ backgroundColor: i % 2 === 0 ? '#fafafa' : 'transparent' }}>
@@ -102,9 +99,8 @@ function TemplatePreview({ template, brandColor, selected }) {
             </div>
           ))}
         </div>
-        {/* Compact totals */}
-        <div className="pt-1.5 mt-auto flex justify-end" style={{ borderTop: '2px solid #222' }}>
-          <div className="w-10 h-1.5 bg-[#222] rounded-sm" style={{ opacity: 0.7 }} />
+        <div className="pt-1.5 mt-auto flex justify-end" style={{ borderTop: `2px solid ${brandColor}` }}>
+          <div className="w-10 h-1.5 rounded-sm" style={{ backgroundColor: brandColor, opacity: 0.7 }} />
         </div>
       </div>
     );
@@ -113,17 +109,14 @@ function TemplatePreview({ template, brandColor, selected }) {
   if (template.id === 'friendly-approachable') {
     return (
       <div className="w-full aspect-[3/4] bg-white rounded border border-navy/10 p-3 flex flex-col">
-        {/* Header: business name left, green pill right */}
         <div className="flex justify-between items-start mb-2">
-          <div className="w-10 h-1.5 bg-navy/70 rounded-full" />
-          <div className="w-8 h-2 rounded-full bg-emerald-400" />
+          <div className="w-10 h-1.5 rounded-full" style={{ backgroundColor: brandColor, opacity: 0.7 }} />
+          <div className="w-8 h-2 rounded-full" style={{ backgroundColor: brandColor }} />
         </div>
-        {/* Gradient greeting area */}
-        <div className="rounded-md px-2 py-2 mb-2" style={{ background: 'linear-gradient(135deg, #e0e7ff 0%, #ede9fe 100%)' }}>
+        <div className="rounded-md px-2 py-2 mb-2" style={{ background: `linear-gradient(135deg, ${brandColor}15 0%, ${brandColor}25 100%)` }}>
           <div className="w-12 h-1 bg-navy/20 rounded-full mb-1" />
           <div className="w-16 h-0.5 bg-navy/10 rounded-full" />
         </div>
-        {/* Card line items */}
         <div className="flex-1 space-y-1">
           {[1, 2, 3].map(i => (
             <div key={i} className="flex justify-between items-center bg-[#f8f8f8] rounded px-1.5 py-1">
@@ -132,8 +125,7 @@ function TemplatePreview({ template, brandColor, selected }) {
             </div>
           ))}
         </div>
-        {/* Navy total bar */}
-        <div className="flex justify-between items-center bg-[#1B2A4A] rounded px-2 py-1.5 mt-auto">
+        <div className="flex justify-between items-center rounded px-2 py-1.5 mt-auto" style={{ backgroundColor: brandColor }}>
           <div className="w-8 h-1 bg-white/70 rounded-full" />
           <div className="w-6 h-1 bg-white/90 rounded-full" />
         </div>
@@ -144,17 +136,13 @@ function TemplatePreview({ template, brandColor, selected }) {
   if (template.id === 'executive-proposal') {
     return (
       <div className="w-full aspect-[3/4] rounded border border-navy/10 flex flex-col overflow-hidden" style={{ backgroundColor: '#FDFBF7' }}>
-        {/* Gold accent line */}
         <div className="h-1 w-full" style={{ backgroundColor: brandColor }} />
         <div className="p-3 flex-1 flex flex-col">
-          {/* Centered serif business name */}
-          <div className="text-center mb-1.5 pb-1.5" style={{ borderBottom: '1.5px solid #1B2A4A' }}>
-            <div className="w-14 h-1.5 mx-auto rounded-full bg-navy/30 mb-0.5" />
+          <div className="text-center mb-1.5 pb-1.5" style={{ borderBottom: `1.5px solid ${brandColor}` }}>
+            <div className="w-14 h-1.5 mx-auto rounded-full mb-0.5" style={{ backgroundColor: brandColor, opacity: 0.5 }} />
             <div className="w-10 h-0.5 mx-auto bg-navy/10 rounded-full" />
           </div>
-          {/* Double border */}
-          <div className="border-b border-navy/20 mb-2" />
-          {/* Two small info boxes */}
+          <div className="mb-2" style={{ borderBottom: `1px solid ${brandColor}30` }} />
           <div className="flex gap-1.5 mb-2">
             <div className="flex-1 rounded p-1" style={{ backgroundColor: '#f4f2ed' }}>
               <div className="w-6 h-0.5 bg-navy/15 rounded-full mb-0.5" />
@@ -165,7 +153,6 @@ function TemplatePreview({ template, brandColor, selected }) {
               <div className="w-8 h-0.5 bg-navy/10 rounded-full" />
             </div>
           </div>
-          {/* Table lines */}
           <div className="flex-1 space-y-1.5">
             {[1, 2, 3].map(i => (
               <div key={i} className="flex justify-between border-b border-navy/5 pb-1">
@@ -174,13 +161,11 @@ function TemplatePreview({ template, brandColor, selected }) {
               </div>
             ))}
           </div>
-          {/* Prominent dark total block */}
-          <div className="mx-auto w-16 rounded py-1 mt-auto mb-1" style={{ backgroundColor: '#1B2A4A' }}>
+          <div className="mx-auto w-16 rounded py-1 mt-auto mb-1" style={{ backgroundColor: brandColor }}>
             <div className="w-8 h-1.5 mx-auto bg-white/80 rounded-full" />
           </div>
-          {/* Double border footer */}
-          <div className="border-t border-navy/15 mt-1" />
-          <div className="border-t border-navy/10 mt-0.5 pt-1">
+          <div className="mt-1" style={{ borderTop: `1px solid ${brandColor}40` }} />
+          <div className="mt-0.5 pt-1" style={{ borderTop: `1px solid ${brandColor}30` }}>
             <div className="w-12 h-0.5 mx-auto rounded-full" style={{ backgroundColor: brandColor, opacity: 0.4 }} />
           </div>
         </div>
@@ -216,9 +201,10 @@ function TemplatePreview({ template, brandColor, selected }) {
 
 export default function SettingsPage() {
   const { user, updateProfile } = useAuth();
-  const [saving, setSaving] = useState(false);
-  const [success, setSuccess] = useState('');
+  const [saveStatus, setSaveStatus] = useState('idle'); // idle | saving | saved | error
   const [error, setError] = useState('');
+  const timerRef = useRef(null);
+  const isFirstRender = useRef(true);
 
   const [form, setForm] = useState({
     name: user?.name || '',
@@ -234,49 +220,65 @@ export default function SettingsPage() {
 
   const update = (field, value) => setForm(prev => ({ ...prev, [field]: value }));
 
-  // Auto-dismiss success message
-  useEffect(() => {
-    if (!success) return;
-    const timer = setTimeout(() => setSuccess(''), 4000);
-    return () => clearTimeout(timer);
-  }, [success]);
-
-  const handleSave = async () => {
-    setSaving(true);
+  const doSave = useCallback(async (data) => {
+    setSaveStatus('saving');
     setError('');
-    setSuccess('');
     try {
       await updateProfile({
-        name: form.name.trim(),
-        businessName: form.businessName.trim(),
-        phone: form.phone.trim(),
-        address: form.address.trim(),
-        brandColor: form.brandColor,
-        templateStyle: form.templateStyle,
-        taxRate: parseFloat(form.taxRate) || 0,
+        name: data.name.trim(),
+        businessName: data.businessName.trim(),
+        phone: data.phone.trim(),
+        address: data.address.trim(),
+        brandColor: data.brandColor,
+        templateStyle: data.templateStyle,
+        taxRate: parseFloat(data.taxRate) || 0,
       });
-      setSuccess('Settings saved successfully.');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus(s => s === 'saved' ? 'idle' : s), 2000);
     } catch (err) {
       setError(err.message || 'Failed to save settings.');
-    } finally {
-      setSaving(false);
+      setSaveStatus('error');
     }
-  };
+  }, [updateProfile]);
+
+  // Auto-save on form changes with debounce
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => doSave(form), 800);
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+  }, [form, doSave]);
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-6 sm:py-8">
-      <h1 className="font-display text-2xl text-navy mb-6">Settings</h1>
-
-      {/* Success / Error Messages */}
-      {success && (
-        <div className="mb-4 px-4 py-3 rounded-lg bg-green-50 border border-green-200 text-green-700 text-sm flex items-center gap-2.5 animate-[selectSlide_200ms_ease-out]">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-green-500 shrink-0">
-            <path fillRule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clipRule="evenodd" />
-          </svg>
-          {success}
+      {/* Sticky save status toast */}
+      {(saveStatus === 'saving' || saveStatus === 'saved') && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full bg-white shadow-lg border border-navy/10 text-sm flex items-center gap-2 animate-[selectSlide_200ms_ease-out]">
+          {saveStatus === 'saving' && (
+            <>
+              <svg className="animate-spin h-3.5 w-3.5 text-navy/40" viewBox="0 0 24 24" fill="none">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+              </svg>
+              <span className="text-navy/50">Saving...</span>
+            </>
+          )}
+          {saveStatus === 'saved' && (
+            <>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-green-500">
+                <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" />
+              </svg>
+              <span className="text-green-600">Saved</span>
+            </>
+          )}
         </div>
       )}
+
+      <h1 className="font-display text-2xl text-navy mb-6">Settings</h1>
+
       {error && (
         <div className="mb-4 px-4 py-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
           {error}
@@ -427,35 +429,6 @@ export default function SettingsPage() {
           <p className="text-xs text-navy/40 mt-2">Applied to all new quotes</p>
         </div>
 
-        {/* Save Button */}
-        <button
-          onClick={handleSave}
-          disabled={saving}
-          className={`w-full h-12 rounded-lg font-semibold text-base active:scale-[0.98] transition-all disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2 ${
-            success
-              ? 'bg-green-500 text-white'
-              : 'bg-gold text-navy hover:bg-gold-light'
-          }`}
-        >
-          {saving ? (
-            <span className="inline-flex items-center gap-2">
-              <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-              </svg>
-              Saving...
-            </span>
-          ) : success ? (
-            <span className="inline-flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-                <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" />
-              </svg>
-              Saved!
-            </span>
-          ) : (
-            'Save Changes'
-          )}
-        </button>
       </div>
     </div>
   );

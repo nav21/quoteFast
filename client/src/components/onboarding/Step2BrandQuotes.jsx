@@ -25,6 +25,21 @@ const TEMPLATES = [
     name: 'Classic Professional',
     description: 'Traditional layout, serif accents, timeless',
   },
+  {
+    id: 'compact-estimate',
+    name: 'Compact Estimate',
+    description: 'Dense layout, no-frills, quick estimates',
+  },
+  {
+    id: 'executive-proposal',
+    name: 'Executive Proposal',
+    description: 'Premium presentation for big jobs',
+  },
+  {
+    id: 'friendly-approachable',
+    name: 'Friendly & Approachable',
+    description: 'Warm, casual, great for residential',
+  },
 ];
 
 function TemplatePreview({ template, brandColor, selected }) {
@@ -79,6 +94,99 @@ function TemplatePreview({ template, brandColor, selected }) {
           </div>
           <div className="border-t-2 pt-1.5 mt-auto flex justify-end" style={{ borderColor: brandColor }}>
             <div className="w-12 h-1.5 rounded-full" style={{ backgroundColor: brandColor, opacity: 0.7 }} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (template.id === 'compact-estimate') {
+    return (
+      <div className="w-full aspect-[3/4] bg-white rounded border border-navy/10 p-3 flex flex-col">
+        <div className="flex justify-between items-center pb-1.5 mb-2" style={{ borderBottom: `2px solid ${brandColor}` }}>
+          <div className="w-10 h-1.5 rounded-sm" style={{ backgroundColor: brandColor }} />
+          <div className="w-8 h-1 bg-navy/20 rounded-full" />
+        </div>
+        <div className="bg-[#f5f5f5] border border-[#e5e5e5] px-1.5 py-1 mb-2">
+          <div className="w-12 h-1 bg-navy/15 rounded-full mb-0.5" />
+          <div className="w-8 h-0.5 bg-navy/8 rounded-full" />
+        </div>
+        <div className="flex-1 space-y-1">
+          {[1, 2, 3].map(i => (
+            <div key={i} className="flex justify-between items-center py-0.5" style={{ backgroundColor: i % 2 === 0 ? '#fafafa' : 'transparent' }}>
+              <div className="w-14 h-1 bg-navy/8 rounded-full" />
+              <div className="w-6 h-1 bg-navy/8 rounded-full" />
+            </div>
+          ))}
+        </div>
+        <div className="pt-1.5 mt-auto flex justify-end" style={{ borderTop: `2px solid ${brandColor}` }}>
+          <div className="w-10 h-1.5 rounded-sm" style={{ backgroundColor: brandColor, opacity: 0.7 }} />
+        </div>
+      </div>
+    );
+  }
+
+  if (template.id === 'friendly-approachable') {
+    return (
+      <div className="w-full aspect-[3/4] bg-white rounded border border-navy/10 p-3 flex flex-col">
+        <div className="flex justify-between items-start mb-2">
+          <div className="w-10 h-1.5 rounded-full" style={{ backgroundColor: brandColor, opacity: 0.7 }} />
+          <div className="w-8 h-2 rounded-full" style={{ backgroundColor: brandColor }} />
+        </div>
+        <div className="rounded-md px-2 py-2 mb-2" style={{ background: `linear-gradient(135deg, ${brandColor}15 0%, ${brandColor}25 100%)` }}>
+          <div className="w-12 h-1 bg-navy/20 rounded-full mb-1" />
+          <div className="w-16 h-0.5 bg-navy/10 rounded-full" />
+        </div>
+        <div className="flex-1 space-y-1">
+          {[1, 2, 3].map(i => (
+            <div key={i} className="flex justify-between items-center bg-[#f8f8f8] rounded px-1.5 py-1">
+              <div className="w-12 h-1 bg-navy/10 rounded-full" />
+              <div className="w-5 h-1 bg-navy/10 rounded-full" />
+            </div>
+          ))}
+        </div>
+        <div className="flex justify-between items-center rounded px-2 py-1.5 mt-auto" style={{ backgroundColor: brandColor }}>
+          <div className="w-8 h-1 bg-white/70 rounded-full" />
+          <div className="w-6 h-1 bg-white/90 rounded-full" />
+        </div>
+      </div>
+    );
+  }
+
+  if (template.id === 'executive-proposal') {
+    return (
+      <div className="w-full aspect-[3/4] rounded border border-navy/10 flex flex-col overflow-hidden" style={{ backgroundColor: '#FDFBF7' }}>
+        <div className="h-1 w-full" style={{ backgroundColor: brandColor }} />
+        <div className="p-3 flex-1 flex flex-col">
+          <div className="text-center mb-1.5 pb-1.5" style={{ borderBottom: `1.5px solid ${brandColor}` }}>
+            <div className="w-14 h-1.5 mx-auto rounded-full mb-0.5" style={{ backgroundColor: brandColor, opacity: 0.5 }} />
+            <div className="w-10 h-0.5 mx-auto bg-navy/10 rounded-full" />
+          </div>
+          <div className="mb-2" style={{ borderBottom: `1px solid ${brandColor}30` }} />
+          <div className="flex gap-1.5 mb-2">
+            <div className="flex-1 rounded p-1" style={{ backgroundColor: '#f4f2ed' }}>
+              <div className="w-6 h-0.5 bg-navy/15 rounded-full mb-0.5" />
+              <div className="w-8 h-0.5 bg-navy/10 rounded-full" />
+            </div>
+            <div className="flex-1 rounded p-1" style={{ backgroundColor: '#f4f2ed' }}>
+              <div className="w-6 h-0.5 bg-navy/15 rounded-full mb-0.5" />
+              <div className="w-8 h-0.5 bg-navy/10 rounded-full" />
+            </div>
+          </div>
+          <div className="flex-1 space-y-1.5">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="flex justify-between border-b border-navy/5 pb-1">
+                <div className="w-14 h-1 bg-navy/8 rounded-full" />
+                <div className="w-6 h-1 bg-navy/8 rounded-full" />
+              </div>
+            ))}
+          </div>
+          <div className="mx-auto w-16 rounded py-1 mt-auto mb-1" style={{ backgroundColor: brandColor }}>
+            <div className="w-8 h-1.5 mx-auto bg-white/80 rounded-full" />
+          </div>
+          <div className="mt-1" style={{ borderTop: `1px solid ${brandColor}40` }} />
+          <div className="border-t border-navy/10 mt-0.5 pt-1">
+            <div className="w-12 h-0.5 mx-auto rounded-full" style={{ backgroundColor: brandColor, opacity: 0.4 }} />
           </div>
         </div>
       </div>
@@ -159,7 +267,7 @@ export default function Step2BrandQuotes({ data, onChange }) {
         <label className="block text-sm font-medium text-navy/70 mb-3">
           Choose your quote style
         </label>
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {TEMPLATES.map((template) => {
             const isSelected = data.templateStyle === template.id;
             return (
