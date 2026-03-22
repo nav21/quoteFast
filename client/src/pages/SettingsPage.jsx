@@ -204,7 +204,7 @@ export default function SettingsPage() {
   const [saveStatus, setSaveStatus] = useState('idle'); // idle | saving | saved | error
   const [error, setError] = useState('');
   const timerRef = useRef(null);
-  const isFirstRender = useRef(true);
+  const userEdited = useRef(false);
 
   const [form, setForm] = useState({
     name: user?.name || '',
@@ -218,7 +218,10 @@ export default function SettingsPage() {
     taxRate: user?.taxRate ?? 0,
   });
 
-  const update = (field, value) => setForm(prev => ({ ...prev, [field]: value }));
+  const update = (field, value) => {
+    userEdited.current = true;
+    setForm(prev => ({ ...prev, [field]: value }));
+  };
 
   const doSave = useCallback(async (data) => {
     setSaveStatus('saving');
@@ -243,12 +246,12 @@ export default function SettingsPage() {
 
   // Auto-save on form changes with debounce
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
+    if (!userEdited.current) return;
     if (timerRef.current) clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(() => doSave(form), 800);
+    timerRef.current = setTimeout(() => {
+      userEdited.current = false;
+      doSave(form);
+    }, 800);
     return () => { if (timerRef.current) clearTimeout(timerRef.current); };
   }, [form, doSave]);
 
