@@ -85,7 +85,6 @@ export default function OnboardingPage() {
               description: s.description || '',
               unit: s.unit,
               defaultPrice: s.defaultPrice,
-              category: s.category || 'General',
             })),
           }),
         });

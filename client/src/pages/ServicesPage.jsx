@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { api } from '../utils/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import CustomSelect from '../components/CustomSelect.jsx';
@@ -10,51 +10,7 @@ const EMPTY_SERVICE = {
   description: '',
   price: '',
   unit: 'flat rate',
-  category: '',
 };
-
-function CategoryInput({ value, onChange, categories }) {
-  const [open, setOpen] = useState(false);
-  const ref = useRef(null);
-  const filtered = categories.filter(c =>
-    c.toLowerCase().includes((value || '').toLowerCase()) && c !== value
-  );
-
-  useEffect(() => {
-    const handleClick = (e) => {
-      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
-    };
-    document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
-  }, []);
-
-  return (
-    <div className="relative" ref={ref}>
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => { onChange(e.target.value); setOpen(true); }}
-        onFocus={() => setOpen(true)}
-        placeholder="Category (optional)"
-        className="w-full h-11 px-4 rounded-lg border border-navy/20 bg-cream/50 text-navy placeholder:text-navy/30 outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 text-sm"
-      />
-      {open && filtered.length > 0 && (
-        <div className="absolute z-10 top-full left-0 right-0 mt-1 bg-white rounded-lg border border-navy/15 shadow-lg max-h-40 overflow-y-auto">
-          {filtered.map(cat => (
-            <button
-              key={cat}
-              type="button"
-              onClick={() => { onChange(cat); setOpen(false); }}
-              className="w-full text-left px-4 py-2.5 text-sm text-navy hover:bg-cream/80 transition-colors cursor-pointer first:rounded-t-lg last:rounded-b-lg"
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
 
 export default function ServicesPage() {
   const { user } = useAuth();
@@ -81,24 +37,6 @@ export default function ServicesPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  // Group services by category
-  const grouped = useMemo(() => {
-    const groups = {};
-    services.forEach(s => {
-      const cat = s.category || 'General';
-      if (!groups[cat]) groups[cat] = [];
-      groups[cat].push(s);
-    });
-    return Object.entries(groups).sort(([a], [b]) => a.localeCompare(b));
-  }, [services]);
-
-  // Unique category names for the combobox
-  const existingCategories = useMemo(() => {
-    const cats = new Set();
-    services.forEach(s => { if (s.category) cats.add(s.category); });
-    return [...cats].sort();
-  }, [services]);
-
   // Add service
   const handleAdd = async () => {
     if (!addForm.name.trim()) return;
@@ -112,7 +50,6 @@ export default function ServicesPage() {
           description: addForm.description.trim(),
           defaultPrice: parseFloat(addForm.price) || 0,
           unit: addForm.unit,
-          category: addForm.category.trim() || 'General',
         }),
       });
       const newService = data.service || data;
@@ -134,7 +71,6 @@ export default function ServicesPage() {
       description: service.description || '',
       price: service.defaultPrice ?? service.price ?? 0,
       unit: service.unit || 'flat rate',
-      category: service.category || 'General',
       isActive: service.isActive !== false,
     });
     setShowAddForm(false);
@@ -154,7 +90,6 @@ export default function ServicesPage() {
           description: editForm.description.trim(),
           defaultPrice: parseFloat(editForm.price) || 0,
           unit: editForm.unit,
-          category: editForm.category.trim() || 'General',
           isActive: editForm.isActive,
         }),
       });
@@ -249,11 +184,6 @@ export default function ServicesPage() {
                 className="h-11 w-32"
               />
             </div>
-            <CategoryInput
-              value={addForm.category}
-              onChange={(val) => setAddForm(f => ({ ...f, category: val }))}
-              categories={existingCategories}
-            />
             <div className="flex gap-2 pt-1">
               <button
                 onClick={handleAdd}
@@ -290,14 +220,10 @@ export default function ServicesPage() {
         </div>
       )}
 
-      {/* Service List grouped by category */}
-      {!loading && grouped.map(([category, categoryServices]) => (
-        <div key={category} className="mb-6">
-          <h3 className="text-xs font-semibold text-navy/40 uppercase tracking-wider mb-3">
-            {category}
-          </h3>
-          <div className="space-y-3">
-            {categoryServices.map(service => {
+      {/* Service List */}
+      {!loading && services.length > 0 && (
+        <div className="space-y-3">
+          {services.map(service => {
               const isEditing = editingId === service._id;
               const isDeleting = deletingId === service._id;
               const inactive = service.isActive === false;
@@ -340,11 +266,6 @@ export default function ServicesPage() {
                           className="h-11 w-32"
                         />
                       </div>
-                      <CategoryInput
-                        value={editForm.category}
-                        onChange={(val) => setEditForm(f => ({ ...f, category: val }))}
-                        categories={existingCategories}
-                      />
                       <label className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="checkbox"
@@ -451,10 +372,9 @@ export default function ServicesPage() {
                   )}
                 </div>
               );
-            })}
-          </div>
+          })}
         </div>
-      ))}
+      )}
 
       {/* Empty State */}
       {!loading && services.length === 0 && !error && (

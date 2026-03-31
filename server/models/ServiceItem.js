@@ -28,11 +28,6 @@ const serviceItemSchema = new mongoose.Schema({
     required: [true, 'Default price is required'],
     min: [0, 'Price cannot be negative'],
   },
-  category: {
-    type: String,
-    trim: true,
-    default: 'General',
-  },
   isActive: {
     type: Boolean,
     default: true,
@@ -42,6 +37,5 @@ const serviceItemSchema = new mongoose.Schema({
 });
 
 serviceItemSchema.index({ userId: 1, isActive: 1 });
-serviceItemSchema.index({ userId: 1, category: 1 });
 
 export default mongoose.model('ServiceItem', serviceItemSchema);

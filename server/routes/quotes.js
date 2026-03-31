@@ -49,7 +49,6 @@ router.post('/generate', async (req, res) => {
         description: s.description,
         unit: s.unit,
         defaultPrice: s.defaultPrice,
-        category: s.category,
       }))
     );
 

@@ -26,7 +26,6 @@ router.post('/batch', async (req, res) => {
       description: s.description || '',
       unit: s.unit || 'flat rate',
       defaultPrice: s.defaultPrice || 0,
-      category: s.category || 'General',
     }));
 
     const created = await ServiceItem.insertMany(docs, { ordered: false });
@@ -43,7 +42,7 @@ router.post('/batch', async (req, res) => {
 // POST /api/services — Create a service
 router.post('/', async (req, res) => {
   try {
-    const { name, description, unit, defaultPrice, category } = req.body;
+    const { name, description, unit, defaultPrice } = req.body;
 
     const service = await ServiceItem.create({
       userId: req.user._id,
@@ -51,7 +50,6 @@ router.post('/', async (req, res) => {
       description,
       unit,
       defaultPrice,
-      category,
     });
 
     res.status(201).json(service);
@@ -69,14 +67,11 @@ router.get('/', async (req, res) => {
   try {
     const filter = { userId: req.user._id };
 
-    if (req.query.category) {
-      filter.category = req.query.category;
-    }
     if (req.query.isActive !== undefined) {
       filter.isActive = req.query.isActive === 'true';
     }
 
-    const services = await ServiceItem.find(filter).sort({ category: 1, name: 1 });
+    const services = await ServiceItem.find(filter).sort({ name: 1 });
     res.json(services);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
@@ -107,13 +102,12 @@ router.put('/:id', async (req, res) => {
       return res.status(404).json({ message: 'Service not found' });
     }
 
-    const { name, description, unit, defaultPrice, category, isActive } = req.body;
+    const { name, description, unit, defaultPrice, isActive } = req.body;
     Object.assign(service, {
       ...(name !== undefined && { name }),
       ...(description !== undefined && { description }),
       ...(unit !== undefined && { unit }),
       ...(defaultPrice !== undefined && { defaultPrice }),
-      ...(category !== undefined && { category }),
       ...(isActive !== undefined && { isActive }),
     });
 
