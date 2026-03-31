@@ -105,6 +105,7 @@ export default function CreateQuotePage() {
           clientName: clientInfo.name.trim(),
           clientEmail: clientInfo.email.trim(),
           clientPhone: clientInfo.phone.trim(),
+          clientAddress: clientInfo.address.trim(),
           jobDescription: jobDescription.trim(),
           lineItems: lineItems.map(({ _tempId, ...rest }) => rest),
           subtotal,

@@ -25,6 +25,15 @@ export default function LoginPage() {
     }
   }, [user, navigate]);
 
+  useEffect(() => {
+    if (justVerified) {
+      const timeout = setTimeout(() => {
+        setSearchParams({}, { replace: true });
+      }, 5000);
+      return () => clearTimeout(timeout);
+    }
+  }, [justVerified, setSearchParams]);
+
   if (authLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -71,15 +80,6 @@ export default function LoginPage() {
       setResending(false);
     }
   };
-
-  useEffect(() => {
-    if (justVerified) {
-      const timeout = setTimeout(() => {
-        setSearchParams({}, { replace: true });
-      }, 5000);
-      return () => clearTimeout(timeout);
-    }
-  }, [justVerified, setSearchParams]);
 
   return (
     <AuthLayout>

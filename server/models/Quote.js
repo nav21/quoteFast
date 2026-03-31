@@ -53,6 +53,11 @@ const quoteSchema = new mongoose.Schema({
     trim: true,
     default: '',
   },
+  clientAddress: {
+    type: String,
+    trim: true,
+    default: '',
+  },
   jobDescription: {
     type: String,
     trim: true,

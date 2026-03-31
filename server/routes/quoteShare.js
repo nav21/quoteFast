@@ -33,6 +33,7 @@ router.get('/:token', async (req, res) => {
         clientName: quote.clientName,
         clientEmail: quote.clientEmail,
         clientPhone: quote.clientPhone,
+        clientAddress: quote.clientAddress,
         jobDescription: quote.jobDescription,
         lineItems: quote.lineItems,
         subtotal: quote.subtotal,

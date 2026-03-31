@@ -41,3 +41,4 @@ Scripts should:
 - Take screenshots at key states
 - Fail loudly if any console errors are detected
 - Target localhost:5173 (or whatever the dev server port is)
+- **Name test files to match .gitignore patterns**: use `playwright-*.js`, `*.test.js`, or `*.spec.js` so they are never committed

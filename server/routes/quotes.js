@@ -192,7 +192,7 @@ Response format:
 router.post('/', async (req, res) => {
   try {
     const {
-      clientName, clientEmail, clientPhone, jobDescription,
+      clientName, clientEmail, clientPhone, clientAddress, jobDescription,
       lineItems, subtotal, tax, taxRate, total, notes, expiresAt, status,
     } = req.body;
 
@@ -213,6 +213,7 @@ router.post('/', async (req, res) => {
       clientName,
       clientEmail,
       clientPhone,
+      clientAddress,
       jobDescription,
       lineItems,
       subtotal,

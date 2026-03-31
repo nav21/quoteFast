@@ -168,6 +168,7 @@ function CleanMinimalTemplate({ quote, business, brandColor, actionProps }) {
           <p className="text-[11px] text-[#777] mt-0.5">
             {quote.clientEmail}{quote.clientEmail && quote.clientPhone && ' '}{quote.clientPhone}
           </p>
+          {quote.clientAddress && <p className="text-[11px] text-[#777] mt-0.5">{quote.clientAddress}</p>}
         </div>
 
         {/* Table — desktop */}
@@ -266,6 +267,7 @@ function BoldModernTemplate({ quote, business, brandColor, actionProps }) {
             <p className="text-[11px] text-[#777] mt-0.5">
               {quote.clientEmail}
               {quote.clientPhone && <><br />{quote.clientPhone}</>}
+              {quote.clientAddress && <><br />{quote.clientAddress}</>}
             </p>
           </div>
           {quote.expiresAt && (
@@ -380,6 +382,7 @@ function ClassicProfessionalTemplate({ quote, business, brandColor, actionProps 
           <p className="text-xs text-[#666] mt-0.5">
             {quote.clientEmail}{quote.clientEmail && quote.clientPhone && ' \u2022 '}{quote.clientPhone}
           </p>
+          {quote.clientAddress && <p className="text-xs text-[#666] mt-0.5">{quote.clientAddress}</p>}
         </div>
 
         {/* Table — desktop */}
@@ -482,6 +485,7 @@ function CompactEstimateTemplate({ quote, business, brandColor, actionProps }) {
           <p className="text-[11px] text-[#777]">
             {quote.clientEmail}{quote.clientEmail && quote.clientPhone && ' '}{quote.clientPhone}
           </p>
+          {quote.clientAddress && <p className="text-[11px] text-[#777]">{quote.clientAddress}</p>}
         </div>
 
         {/* Table — desktop */}
@@ -589,6 +593,7 @@ function ExecutiveProposalTemplate({ quote, business, brandColor, actionProps })
             <div className="text-[11px] text-[#666] mt-1 leading-relaxed">
               {quote.clientEmail && <p>{quote.clientEmail}</p>}
               {quote.clientPhone && <p>{quote.clientPhone}</p>}
+              {quote.clientAddress && <p>{quote.clientAddress}</p>}
             </div>
           </div>
           <div className="px-5 py-4 rounded-md" style={{ backgroundColor: '#f4f2ed' }}>
@@ -716,6 +721,7 @@ function FriendlyApproachableTemplate({ quote, business, brandColor, actionProps
           <p className="text-[11px] text-[#777] mt-0.5">
             {quote.clientEmail}{quote.clientEmail && quote.clientPhone && ' '}{quote.clientPhone}
           </p>
+          {quote.clientAddress && <p className="text-[11px] text-[#777] mt-0.5">{quote.clientAddress}</p>}
         </div>
 
         {/* Greeting card */}

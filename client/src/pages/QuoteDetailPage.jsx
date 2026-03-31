@@ -65,6 +65,7 @@ export default function QuoteDetailPage() {
   const [clientName, setClientName] = useState('');
   const [clientEmail, setClientEmail] = useState('');
   const [clientPhone, setClientPhone] = useState('');
+  const [clientAddress, setClientAddress] = useState('');
   const [lineItems, setLineItems] = useState([]);
   const [notes, setNotes] = useState('');
   const [terms, setTerms] = useState('');
@@ -80,6 +81,7 @@ export default function QuoteDetailPage() {
         setClientName(q.clientName || '');
         setClientEmail(q.clientEmail || '');
         setClientPhone(q.clientPhone || '');
+        setClientAddress(q.clientAddress || '');
         setLineItems((q.lineItems || []).map(item => ({ ...item, _tempId: crypto.randomUUID() })));
         const { notes: n, terms: t } = splitNotes(q.notes || '');
         setNotes(n);
@@ -116,6 +118,7 @@ export default function QuoteDetailPage() {
       clientName: clientName.trim(),
       clientEmail: clientEmail.trim(),
       clientPhone: clientPhone.trim(),
+      clientAddress: clientAddress.trim(),
       jobDescription: jobDescription.trim(),
       lineItems: lineItems.map(({ _tempId, ...rest }) => rest),
       subtotal,
@@ -328,6 +331,13 @@ export default function QuoteDetailPage() {
                 className="flex-1 h-11 px-4 rounded-lg border border-navy/20 bg-cream/50 text-navy placeholder:text-navy/30 outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 text-sm"
               />
             </div>
+            <input
+              type="text"
+              value={clientAddress}
+              onChange={e => setClientAddress(e.target.value)}
+              placeholder="Address"
+              className="w-full h-11 px-4 rounded-lg border border-navy/20 bg-cream/50 text-navy placeholder:text-navy/30 outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 text-sm"
+            />
           </div>
 
           {/* Job description (editable) */}
@@ -421,6 +431,9 @@ export default function QuoteDetailPage() {
               <p className="text-sm text-navy/50 mt-0.5">
                 {[quote.clientEmail, quote.clientPhone].filter(Boolean).join(' \u00B7 ')}
               </p>
+            )}
+            {quote.clientAddress && (
+              <p className="text-sm text-navy/50 mt-0.5">{quote.clientAddress}</p>
             )}
           </div>
 
