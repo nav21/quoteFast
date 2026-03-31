@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext.jsx';
+import { AuthProvider, useAuth } from './context/AuthContext.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import AppLayout from './components/AppLayout.jsx';
 import LoginPage from './pages/LoginPage.jsx';
@@ -12,6 +12,15 @@ import SettingsPage from './pages/SettingsPage.jsx';
 import ServicesPage from './pages/ServicesPage.jsx';
 import QuoteDetailPage from './pages/QuoteDetailPage.jsx';
 import VerifyEmailPage from './pages/VerifyEmailPage.jsx';
+import LandingPage from './pages/LandingPage.jsx';
+
+function LandingRoute() {
+  const { user, loading } = useAuth();
+
+  if (loading) return null;
+  if (user) return <Navigate to="/dashboard" replace />;
+  return <LandingPage />;
+}
 
 function App() {
   return (
@@ -39,7 +48,7 @@ function App() {
               <Route path="/services" element={<ServicesPage />} />
             </Route>
 
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/" element={<LandingRoute />} />
           </Routes>
         </div>
       </AuthProvider>
