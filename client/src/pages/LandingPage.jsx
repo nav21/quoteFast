@@ -44,7 +44,7 @@ export default function LandingPage() {
       </nav>
 
       {/* ===== HERO ===== */}
-      <section className="relative min-h-[calc(100vh-64px)] flex items-center justify-center px-6 py-16 overflow-hidden">
+      <section className="relative min-h-[70vh] flex items-center justify-center px-6 py-12 overflow-hidden">
         {/* Background layers */}
         <div className="absolute inset-0 bg-dark" />
 
@@ -100,7 +100,7 @@ export default function LandingPage() {
         <div className="relative z-10 text-center max-w-[620px]">
           {/* Badge */}
           <div
-            className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[2.5px] text-gold bg-gold/[0.08] border border-gold/15 px-4 py-1.5 rounded-full mb-6"
+            className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[2.5px] text-gold bg-gold/[0.08] border border-gold/15 px-5 py-2 rounded-full mb-6"
             style={{ animation: 'fadeSlideUp 500ms ease-out both' }}
           >
             <span
@@ -115,7 +115,7 @@ export default function LandingPage() {
 
           {/* Headline */}
           <h1
-            className="font-display text-4xl sm:text-5xl font-bold text-cream leading-[1.15] tracking-tight mb-4"
+            className="font-display text-5xl sm:text-6xl font-bold text-cream leading-[1.1] tracking-tight mb-5"
             style={{ animation: 'fadeSlideUp 600ms ease-out 100ms both' }}
           >
             Professional Quotes
@@ -129,7 +129,7 @@ export default function LandingPage() {
 
           {/* Subtext */}
           <p
-            className="text-base text-cream/50 leading-relaxed mb-8 max-w-[460px] mx-auto"
+            className="text-lg text-cream/50 leading-relaxed mb-8 max-w-[500px] mx-auto"
             style={{ animation: 'fadeSlideUp 600ms ease-out 250ms both' }}
           >
             Describe the job in plain English. AI builds the line items.
@@ -143,14 +143,14 @@ export default function LandingPage() {
           >
             <Link
               to="/signup"
-              className="bg-gold text-dark px-8 py-3.5 rounded-xl text-[15px] font-bold hover:bg-gold-light transition-all duration-200"
+              className="bg-gold text-dark px-10 py-4 rounded-xl text-base font-bold hover:bg-gold-light transition-all duration-200"
               style={{ boxShadow: '0 0 20px rgba(212,168,67,0.25), 0 4px 12px rgba(0,0,0,0.3)' }}
             >
               Get Started Free
             </Link>
             <a
               href="#how-it-works"
-              className="bg-cream/5 text-cream/70 px-8 py-3.5 rounded-xl text-[15px] font-semibold border border-cream/10 hover:bg-cream/10 hover:text-cream transition-all duration-200"
+              className="bg-cream/5 text-cream/70 px-10 py-4 rounded-xl text-base font-semibold border border-cream/10 hover:bg-cream/10 hover:text-cream transition-all duration-200"
             >
               See How It Works
             </a>
@@ -159,12 +159,12 @@ export default function LandingPage() {
       </section>
 
       {/* ===== FLOW STRIP ===== */}
-      <section id="how-it-works" className="relative bg-dark-deep px-6 py-12" ref={flowRef}>
+      <section id="how-it-works" className="relative bg-dark-deep px-6 py-14" ref={flowRef}>
         {/* Gold hairline top */}
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
 
         <div className="max-w-3xl mx-auto bg-cream/[0.03] border border-gold/[0.08] rounded-2xl p-8 sm:p-10 backdrop-blur-sm">
-          <p className="text-center text-[11px] font-bold uppercase tracking-[3px] text-gold mb-8">
+          <p className="text-center text-xs font-bold uppercase tracking-[3px] text-gold mb-8">
             How It Works
           </p>
           <div className="flex flex-col sm:flex-row gap-8 sm:gap-0">
@@ -173,8 +173,8 @@ export default function LandingPage() {
               <div className="w-12 h-12 mx-auto mb-3 bg-gold/[0.08] border border-gold/[0.12] rounded-xl flex items-center justify-center font-display text-lg font-bold text-gold">
                 01
               </div>
-              <h3 className="text-[15px] font-bold text-cream mb-1.5">Describe the Job</h3>
-              <p className="text-xs text-cream/40 leading-relaxed">
+              <h3 className="text-base font-bold text-cream mb-1.5">Describe the Job</h3>
+              <p className="text-sm text-cream/40 leading-relaxed">
                 Type what the client needs in plain English. Like texting a coworker.
               </p>
             </div>
@@ -184,8 +184,8 @@ export default function LandingPage() {
               <div className="w-12 h-12 mx-auto mb-3 bg-gold/[0.08] border border-gold/[0.12] rounded-xl flex items-center justify-center font-display text-lg font-bold text-gold">
                 02
               </div>
-              <h3 className="text-[15px] font-bold text-cream mb-1.5">AI Builds the Quote</h3>
-              <p className="text-xs text-cream/40 leading-relaxed">
+              <h3 className="text-base font-bold text-cream mb-1.5">AI Builds the Quote</h3>
+              <p className="text-sm text-cream/40 leading-relaxed">
                 Line items, pricing, and terms generated from your service catalog.
               </p>
             </div>
@@ -195,8 +195,8 @@ export default function LandingPage() {
               <div className="w-12 h-12 mx-auto mb-3 bg-gold/[0.08] border border-gold/[0.12] rounded-xl flex items-center justify-center font-display text-lg font-bold text-gold">
                 03
               </div>
-              <h3 className="text-[15px] font-bold text-cream mb-1.5">Client Approves</h3>
-              <p className="text-xs text-cream/40 leading-relaxed">
+              <h3 className="text-base font-bold text-cream mb-1.5">Client Approves</h3>
+              <p className="text-sm text-cream/40 leading-relaxed">
                 Share a link. They see a branded quote and approve with one tap.
               </p>
             </div>
@@ -217,15 +217,15 @@ export default function LandingPage() {
             filter: 'blur(30px)',
           }}
         />
-        <h2 className="relative z-10 font-display text-2xl sm:text-3xl font-bold text-cream mb-2">
+        <h2 className="relative z-10 font-display text-3xl sm:text-4xl font-bold text-cream mb-3">
           Stop writing quotes by hand.
         </h2>
-        <p className="relative z-10 text-sm text-cream/40 mb-6">
+        <p className="relative z-10 text-base text-cream/40 mb-6">
           Free to start. No credit card required.
         </p>
         <Link
           to="/signup"
-          className="relative z-10 inline-block bg-gold text-dark px-8 py-3.5 rounded-xl text-[15px] font-bold hover:bg-gold-light transition-all duration-200"
+          className="relative z-10 inline-block bg-gold text-dark px-10 py-4 rounded-xl text-base font-bold hover:bg-gold-light transition-all duration-200"
           style={{ boxShadow: '0 0 24px rgba(212,168,67,0.2)' }}
         >
           Create Your First Quote
